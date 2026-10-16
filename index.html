@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' http://localhost:* ws://localhost:*; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <title>MediMatch | 의료기관 진료비 예외정산 & 공공관리 검증 솔루션</title>
+  <meta name="description" content="학술 논문 연계 애플리케이션: 의료기관 진료비 미식별 입금 및 사망환자 미수령 환불금의 5단계 다차원 교차검증 및 공공연계 솔루션">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230284c7'/%3E%3Cpath d='M9 16h14M16 9v14' stroke='%23ffffff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+
+<body>
+  <!-- 상단 글로벌 내비게이션 -->
+  <header class="app-header" role="banner">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand" aria-label="메인 포트폴리오로 이동">
+        <div class="brand-icon-wrap" aria-hidden="true">
+          <svg class="svg-icon" viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <div style="display:flex; flex-direction:column;">
+          <span class="brand-title">MediMatch</span>
+          <span class="brand-badge" style="margin-top:2px;">RESEARCH APP</span>
+        </div>
+        <div class="live-pulse-badge">
+          <span class="pulse-ring-dot"></span>
+          <span>LIVE ENGINE</span>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <a href="../index.html#research" class="nav-btn" aria-label="연구 논문 섹션으로 이동">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Portfolio 2026</span>
+        </a>
+
+        <a href="../research_paper/논문_의료기관_진료비_미식별_입금_및_사망환자_미수령_환불금의_공공관리체계_구축_방안_오하율.pdf" download class="nav-btn" aria-label="논문 PDF 다운로드">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+          <span>논문 PDF</span>
+        </a>
+
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="다크/라이트 테마 전환">
+          <svg class="svg-icon theme-icon-sun" id="themeIconSun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="svg-icon theme-icon-moon" id="themeIconMoon" viewBox="0 0 24 24" aria-hidden="true"
+            style="display:none;">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 첫 화면 필수 배너 (과제 통과 기준 BRB-C03 준수) -->
+  <section class="hero-banner" aria-label="논문 연계 안내">
+    <div class="hero-content">
+      <div class="hero-meta-tag">
+        <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span>학술 논문 반영 애플리케이션 (연구자: 오하율)</span>
+      </div>
+
+      <!-- 논문 제목 -->
+      <h1 class="hero-paper-title">
+        의료기관 진료비 미식별 입금 및 사망환자 미수령 환불금의 공공관리체계 구축 방안
+      </h1>
+
+      <!-- 누구를 어떻게 돕는가 1문장 (BRB-C01 / BRB-C03) -->
+      <p class="hero-purpose-statement" id="purposeStatement">
+        <strong>[앱 한 문장]</strong> 병원 원무과 행정 담당자가 타인명의 송금이나 사망환자 진료비 환불금을 정산할 때,
+        이 앱이 논문에서 규명한 <strong>'5단계 다차원 교차검증 및 안심상속 공공연계 모형'</strong>을 통해
+        미식별 입금을 신속히 대조하고 적법 상속권자를 다각도로 검증하여 <strong>오지급 위험을 획기적으로 낮추고 실무 착오 리스크를 최소화</strong>해 줍니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- 메인 본문 컨테이너 -->
+  <main class="main-wrapper" id="mainContent">
+
+    <!-- 글로벌 아코디언 제어 바 -->
+    <div class="accordion-global-toolbar" role="toolbar" aria-label="섹션 아코디언 제어">
+      <div class="accordion-toolbar-left">
+        <span class="toolbar-label">파트 아코디언 제어:</span>
+        <button type="button" class="btn-toolbar" id="btnExpandAllAccordions" aria-label="모든 파트 섹션 펼치기">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="7 13 12 18 17 13"></polyline>
+            <polyline points="7 6 12 11 17 6"></polyline>
+          </svg>
+          <span>모두 펼치기</span>
+        </button>
+        <button type="button" class="btn-toolbar" id="btnCollapseAllAccordions" aria-label="모든 파트 섹션 접기">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="17 11 12 6 7 11"></polyline>
+            <polyline points="17 18 12 13 7 18"></polyline>
+          </svg>
+          <span>모두 접기</span>
+        </button>
+      </div>
+      <div class="accordion-toolbar-right">
+        <button type="button" class="btn-toolbar" id="btnQuickSampleRun" aria-label="대학병원 5,000건 무작위 표본추출 및 통계분석 실행">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+          </svg>
+          <span>5,000건 표본 재추출 &amp; 통계 갱신</span>
+        </button>
+        <span class="toolbar-stat-indicator">총 8개 연구·통계 분석 파트 활성화</span>
+      </div>
+    </div>
+
+    <!-- [파트 01] 할 일 01: 정산 대기 데이터 로드 및 대표 케이스 선택 -->
+    <div class="accordion-item expanded" id="accordionPart1">
+      <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart1">
+        <div class="accordion-header-left">
+          <span class="part-badge">파트 01</span>
+          <div class="accordion-title-wrap">
+            <h2 class="accordion-title">
+              <span class="section-step-num">할 일 01</span>
+              정산 대기 케이스 불러오기 &amp; 3대 시나리오
+            </h2>
+            <span class="accordion-subtitle">보호자 대납 60% · 환자 개명 20% · 사망환자 환불금 50%</span>
+          </div>
+        </div>
+        <div class="accordion-header-right">
+          <span class="accordion-status-badge active">준비 완료</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="accordion-content" id="accordionContentPart1" role="region" aria-labelledby="accordionPart1">
+        <div class="section-head" style="margin-bottom: 16px;">
+          <div class="section-head-left">
+            <p class="section-head-desc" style="margin: 0;">
+              논문에서 규명한 3대 대표 정산 시나리오를 선택하거나 150건 모의 데이터셋을 로드합니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3대 대표 시나리오 프리셋 카드 -->
+        <div class="preset-grid" role="tablist" aria-label="대표 연구 케이스 선택">
+          <button type="button" class="preset-card active" data-preset="guardian" role="tab" aria-selected="true">
+            <span class="preset-badge">케이스 1 · 보호자 대납 (60%)</span>
+            <h3 class="preset-title">자녀가 부친 진료비 대납</h3>
+            <p class="preset-desc">입금자명(김영희)과 환자명(이순신)이 달라 기존 단순대조에서 미식별로 방치되던 건</p>
+            <div class="preset-amount">
+              <span>정산 금액</span>
+              <span>148,720원</span>
+            </div>
+          </button>
+
+          <button type="button" class="preset-card" data-preset="renamed" role="tab" aria-selected="false">
+            <span class="preset-badge">케이스 2 · 환자 개명 (20%)</span>
+            <h3 class="preset-title">환자 본인 개명 후 입금</h3>
+            <p class="preset-desc">금융 입금자명(김서연)과 과거 EMR 등록명(김민지) 불일치로 식별 불가했던 건</p>
+            <div class="preset-amount">
+              <span>정산 금액</span>
+              <span>235,100원</span>
+            </div>
+          </button>
+
+          <button type="button" class="preset-card" data-preset="deceased" role="tab" aria-selected="false">
+            <span class="preset-badge">케이스 3 · 사망환자 환불금 (공공연계)</span>
+            <h3 class="preset-title">사망환자 진료비 환불금</h3>
+            <p class="preset-desc">심평원 보험자격 말소 감지 후 3차 EMR 정밀진단 사망판정 확정 및 안심상속 공공연계</p>
+            <div class="preset-amount">
+              <span>환불 결정액</span>
+              <span>350,000원</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- 액션 제어 바 -->
+        <div class="control-bar">
+          <div class="control-left">
+            <button type="button" class="btn-primary" id="runPipelineBtn" aria-label="5단계 교차검증 실행">
+              <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>5단계 교차검증 실행</span>
+            </button>
+            <button type="button" class="btn-secondary" id="loadBatchBtn" aria-label="150건 모의 데이터 갱신">
+              <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <polyline points="23 20 23 14 17 14"></polyline>
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+              </svg>
+              <span>150건 원자료 새로고침</span>
+            </button>
+          </div>
+          <div class="control-right">
+            <button type="button" class="btn-secondary" id="openSiemModalBtn" aria-label="보안 감사 & SIEM 연동 센터">
+              <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <span>보안 감사 & SIEM 연동</span>
+            </button>
+            <button type="button" class="btn-secondary" id="openReportBtn" aria-label="원무 감사 리포트 발급">
+              <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span>원무 결산 감사 리포트 발급</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [파트 02] 할 일 02: 5단계 다차원 교차검증 파이프라인 분석 -->
+    <div class="accordion-item expanded" id="accordionPart2">
+      <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart2">
+        <div class="accordion-header-left">
+          <span class="part-badge">파트 02</span>
+          <div class="accordion-title-wrap">
+            <h2 class="accordion-title">
+              <span class="section-step-num">할 일 02</span>
+              5단계 다차원 교차검증 파이프라인 분석
+            </h2>
+            <span class="accordion-subtitle">1차 단순대조 ~ 2차 자격확인 ~ 3차 EMR 사망진단 확정 ~ 4차 안심상속 ~ 5차 종결</span>
+          </div>
+        </div>
+        <div class="accordion-header-right">
+          <span class="accordion-status-badge active">실시간 연동</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="accordion-content" id="accordionContentPart2" role="region" aria-labelledby="accordionPart2">
+        <div class="section-head" style="margin-bottom: 16px;">
+          <div class="section-head-left">
+            <p class="section-head-desc" style="margin: 0;">
+              논문 모형에 따라 단계별 검증이 실시간 순차적으로 진행되며, 오지급 위험 통제 여부를 즉시 판정합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="pipeline-card">
+          <!-- 5단계 플로우 노드 그리드 -->
+          <div class="pipeline-diagram" id="pipelineDiagram">
+            <!-- Step 1 -->
+            <div class="pipeline-node" id="nodeStep1">
+              <div class="node-header">
+                <span class="node-step-tag">STEP 01</span>
+                <span class="node-status-dot"></span>
+              </div>
+              <h4 class="node-title">1차 단순 성명 대조</h4>
+              <p class="node-desc">금융 입금자명과 환자 등록명 1:1 단순 대조 (심평원 보험자격 말소 감지)</p>
+              <span class="node-result-badge">대기 중</span>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="pipeline-node" id="nodeStep2">
+              <div class="node-header">
+                <span class="node-step-tag">STEP 02</span>
+                <span class="node-status-dot"></span>
+              </div>
+              <h4 class="node-title">2차 다차원 교차검증</h4>
+              <p class="node-desc">HIS 진료기간·보호자·자격확인 (외국인·무자격 의심 감지 / 섣부른 사망단정 배제)</p>
+              <span class="node-result-badge">대기 중</span>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="pipeline-node" id="nodeStep3">
+              <div class="node-header">
+                <span class="node-step-tag">STEP 03</span>
+                <span class="node-status-dot"></span>
+              </div>
+              <h4 class="node-title">3차 예외분류·정밀진단</h4>
+              <p class="node-desc">원내 EMR 의무기록·사망진단서 정밀 진단 후 [사망환자] 최종 판정 확정</p>
+              <span class="node-result-badge">대기 중</span>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="pipeline-node" id="nodeStep4">
+              <div class="node-header">
+                <span class="node-step-tag">STEP 04</span>
+                <span class="node-status-dot"></span>
+              </div>
+              <h4 class="node-title">4차 공공행정정보 연계</h4>
+              <p class="node-desc">사망환자 안심상속 원스톱 상속인 법적 대리권 검증 (미제출 시 임의지급 보류)</p>
+              <span class="node-result-badge">대기 중</span>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="pipeline-node" id="nodeStep5">
+              <div class="node-header">
+                <span class="node-step-tag">STEP 05</span>
+                <span class="node-status-dot"></span>
+              </div>
+              <h4 class="node-title">5차 적법 후속처리</h4>
+              <p class="node-desc">진료비 자동수납 또는 환불금 지급 종결 (오지급 원천차단)</p>
+              <span class="node-result-badge">대기 중</span>
+            </div>
+          </div>
+
+          <!-- 최종 판정 요약 배너 -->
+          <div class="eval-result-card">
+            <div class="eval-left">
+              <div class="eval-icon-badge">
+                <svg class="svg-icon lg" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="eval-status-title" id="evalStatusTitle">최종 판정: 분석 대기</h3>
+                <p class="eval-status-detail" id="evalStatusDetail">
+                  상단의 '5단계 교차검증 실행' 버튼을 누르면 실시간 분석이 시작됩니다.
+                </p>
+              </div>
+            </div>
+            <div>
+              <span class="badge badge-neutral" id="evalBadge">대기 상태</span>
+            </div>
+          </div>
+
+          <!-- 논문 핵심 연구 지표 비교 카드 (데이터 기반 100% 완전 동적 연동) -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <span class="metric-label">미식별 입금 식별 성공률</span>
+              <div class="metric-numbers">
+                <span class="metric-val-main" id="statDepRate">84.0%</span>
+                <span class="metric-diff-badge up" id="diffDepRate">+64.0%p</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-bar-fill" id="barDepRate" style="width: 84%;"></div>
+              </div>
+              <p class="metric-compare" id="compareDepRate">기존 단순대조 20.0% &rarr; 제안모형 84.0%</p>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">미식별 입금 평균 처리 소요일</span>
+              <div class="metric-numbers">
+                <span class="metric-val-main" id="statDepDays">9.6일</span>
+                <span class="metric-diff-badge down" id="diffDepDays">-128.1일</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-bar-fill success" id="barDepDays" style="width: 93%;"></div>
+              </div>
+              <p class="metric-compare" id="compareDepDays">기존 137.7일 &rarr; 제안모형 9.6일로 단축</p>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">환불금 적격 수령 확인율</span>
+              <div class="metric-numbers">
+                <span class="metric-val-main" id="statRefRate">80.0%</span>
+                <span class="metric-diff-badge up" id="diffRefRate">+80.0%p</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-bar-fill" id="barRefRate" style="width: 80%;"></div>
+              </div>
+              <p class="metric-compare" id="compareRefRate">기존 단순대조 0.0% &rarr; 제안모형 80.0%</p>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">환불금 평균 잔류 소요일</span>
+              <div class="metric-numbers">
+                <span class="metric-val-main" id="statRefDays">40.4일</span>
+                <span class="metric-diff-badge down" id="diffRefDays">-147.6일</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-bar-fill success" id="barRefDays" style="width: 78.5%;"></div>
+              </div>
+              <p class="metric-compare" id="compareRefDays">기존 188.0일 &rarr; 제안모형 40.4일로 단축</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [파트 03] 할 일 03: 직접 시뮬레이션 및 데이터 안전성 검증 -->
+    <div class="accordion-item expanded" id="accordionPart3">
+      <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart3">
+        <div class="accordion-header-left">
+          <span class="part-badge">파트 03</span>
+          <div class="accordion-title-wrap">
+            <h2 class="accordion-title">
+              <span class="section-step-num">할 일 03</span>
+              단건 직접 입력 시뮬레이터 &amp; 데이터셋 관리
+            </h2>
+            <span class="accordion-subtitle">원무 실무자 정산 데이터 실시간 수정·신규 추가·CRUD 관리 및 결산 CSV 추출</span>
+          </div>
+        </div>
+        <div class="accordion-header-right">
+          <span class="accordion-status-badge active">활성화</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="accordion-content" id="accordionContentPart3" role="region" aria-labelledby="accordionPart3">
+        <div class="section-head" style="margin-bottom: 16px;">
+          <div class="section-head-left">
+            <p class="section-head-desc" style="margin: 0;">
+              행정 담당자가 임의의 입금/환불 데이터를 입력해 보거나, 연구 원자료 전체 트랜잭션을 필터링하여 확인합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="sim-form-grid">
+          <!-- 직접 입력 폼 (잘못된 입력에도 중단되지 않는 방어적 코딩 적용) -->
+          <div class="form-panel">
+            <div
+              style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap;">
+              <div>
+                <h3 style="font-size:15px; font-weight:800; margin-bottom:2px;">정산 데이터 직접 입력</h3>
+                <p style="font-size:12px; color:var(--text-light);">
+                  원무과 입금 내역을 직접 수정하고 실시간 파이프라인 반응을 확인합니다.
+                </p>
+              </div>
+              <label class="security-toggle-label" title="개인정보보호법 제29조 안전조치에 따른 성명 마스킹 시뮬레이션">
+                <input type="checkbox" id="maskingToggle" checked>
+                <svg class="svg-icon sm" viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>안심 마스킹</span>
+              </label>
+            </div>
+
+            <!-- 대화형 시뮬레이션 제어 바 (실무 테스트 컨트롤러) -->
+            <div class="form-target-indicator mode-direct" id="formTargetIndicator" role="region" aria-label="시뮬레이션 모드 및 빠른 테스트 제어">
+              <div class="target-indicator-left">
+                <span class="target-indicator-dot" id="targetIndicatorDot"></span>
+                <div class="target-indicator-info">
+                  <div class="target-indicator-title-row">
+                    <span class="target-indicator-label" id="targetIndicatorLabel">신규 직접 시뮬레이션 모드</span>
+                    <span class="badge badge-live" id="targetIndicatorBadge">직접 입력 중</span>
+                  </div>
+                  <div class="target-indicator-sub" id="targetIndicatorSub">아래 입력값을 실시간 수정하거나 빠른 테스트 액션으로 즉시 검증하세요.</div>
+                </div>
+              </div>
+              <div class="target-indicator-actions" id="targetIndicatorActions">
+                <button type="button" class="indicator-action-btn primary" id="btnIndicatorRunSim"
+                  title="현재 입력값으로 5단계 교차검증 파이프라인 즉시 시뮬레이션">
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  <span>5단계 즉시 검증</span>
+                </button>
+                <button type="button" class="indicator-action-btn" id="btnIndicatorAutoFill"
+                  title="선수금 수납·보호자 대납·개명 등 실무 모의 케이스 자동 채우기">
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                  </svg>
+                  <span>모의 케이스 채우기</span>
+                </button>
+                <button type="button" class="indicator-action-btn" id="btnIndicatorReset" title="신규 기본 입력 모드로 초기화"
+                  style="display:none;">
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  <span>신규 모드로 리셋</span>
+                </button>
+                <button type="button" class="indicator-action-btn success" id="btnIndicatorSaveRow"
+                  title="수정된 내용을 현재 선택된 테이블 행에 즉시 반영" style="display:none;">
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>행 반영 저장</span>
+                </button>
+              </div>
+            </div>
+
+            <form id="simForm" onsubmit="return false;"
+              style="display:flex; flex-direction:column; gap:14px; margin-top:10px;">
+              <div class="form-group">
+                <label class="form-label" for="inputDepositor">
+                  <span>입금자명 / 신청인</span>
+                  <span class="form-hint">금융 거래자명</span>
+                </label>
+                <input type="text" id="inputDepositor" class="form-input" value="김영희(자녀)" required maxlength="20">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="inputPatient">
+                  <span>환자 등록명</span>
+                  <span class="form-hint">원내 EMR 환자명</span>
+                </label>
+                <input type="text" id="inputPatient" class="form-input" value="이순신(부친)" required maxlength="20">
+              </div>
+
+              <!-- 3대 정산 금액 체계 (납부 · 확정 · 환불) 폼 그룹 -->
+              <div class="form-three-tier-card">
+                <div class="form-tier-header">
+                  <span class="form-tier-title">
+                    <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true" style="stroke: #0284c7;">
+                      <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                      <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                    <span>3대 정산 금액 체계 (납부 · 확정 · 환불)</span>
+                  </span>
+                  <span class="form-tier-desc">①원납부 입력 시, 심평원 심사 기준에 따라 ②확정 진료비 및 ③환불금이 자동 산출됩니다.</span>
+                </div>
+
+                <!-- ① 원납부액 / 선수금 (직접 입력 가능) -->
+                <div class="tier-field deposit-field">
+                  <div class="form-label-with-tag">
+                    <label class="form-label" for="inputAmount">
+                      <span class="tier-tag deposit-tag">납부</span>
+                      <span>원납부 / 선수금 (수납액)</span>
+                    </label>
+                    <span class="form-hint">직접 수정 가능 · 1,000단위</span>
+                  </div>
+                  <input type="text" inputmode="numeric" id="inputAmount" class="form-input" value="148,720" required
+                    placeholder="예: 148,720" autocomplete="off">
+                  <p class="amount-korean-readout" id="amountKoreanReadout" aria-live="polite">금 일십사만 팔천칠백이십 원정</p>
+                  <div class="amount-quick-chips" role="group" aria-label="금액 빠른 증액">
+                    <span class="quick-chip-label">퀵 증액:</span>
+                    <button type="button" class="quick-amount-chip" data-add="10000">+1만</button>
+                    <button type="button" class="quick-amount-chip" data-add="50000">+5만</button>
+                    <button type="button" class="quick-amount-chip" data-add="100000">+10만</button>
+                    <button type="button" class="quick-amount-chip" data-add="500000">+50만</button>
+                    <button type="button" class="quick-amount-chip" data-add="1000000">+100만</button>
+                  </div>
+                </div>
+
+                <!-- ② 심평원 확정 진료비 (자동 산출 · 읽기 전용) -->
+                <div class="tier-field confirmed-field">
+                  <div class="form-label-with-tag">
+                    <label class="form-label" for="inputConfirmedCost">
+                      <span class="tier-tag confirmed-tag">확정</span>
+                      <span>심평원 확정 진료비 (본인부담금)</span>
+                    </label>
+                    <span class="tier-auto-badge" title="정산 구분과 심사 결과에 따라 자동 계산되어 직접 수정 불가">
+                      <svg class="svg-icon xs" viewBox="0 0 24 24" aria-hidden="true" style="stroke:#64748b;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                      <span>자동 산출 (수정 불가)</span>
+                    </span>
+                  </div>
+                  <input type="text" id="inputConfirmedCost" class="form-input readonly-tier" value="148,720원" readonly tabindex="-1" title="심평원 심사 기준 진료비 자동 반영">
+                </div>
+
+                <!-- ③ 과오납 환불금 (자동 산출 · 읽기 전용) -->
+                <div class="tier-field refund-field">
+                  <div class="form-label-with-tag">
+                    <label class="form-label" for="inputRefundAmount">
+                      <span class="tier-tag refund-tag" id="formRefundTag">환불</span>
+                      <span>과오납 환불 결정액</span>
+                    </label>
+                    <span class="tier-auto-badge" id="formRefundBadge" title="과오납 차액에 따라 자동 계산되어 직접 수정 불가">
+                      <svg class="svg-icon xs" viewBox="0 0 24 24" aria-hidden="true" style="stroke:#64748b;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                      <span id="formRefundBadgeText">자동 산출 (수정 불가)</span>
+                    </span>
+                  </div>
+                  <input type="text" id="inputRefundAmount" class="form-input readonly-tier" value="0원" readonly tabindex="-1" title="기납부액과 확정 진료비의 차액 자동 반영">
+                </div>
+              </div>
+
+              <!-- Custom Select 1: 정산 구분 -->
+              <div class="form-group">
+                <label class="form-label" id="caseTypeLabel">정산 구분</label>
+                <div class="custom-select-wrapper" id="caseTypeSelectWrapper">
+                  <button type="button" class="custom-select-trigger" id="caseTypeTrigger" aria-labelledby="caseTypeLabel"
+                    aria-haspopup="listbox" aria-expanded="false">
+                    <span class="custom-select-value" id="caseTypeValue">진료비 수납</span>
+                    <svg class="svg-icon custom-select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  <ul class="custom-select-dropdown" id="caseTypeDropdown" role="listbox" aria-labelledby="caseTypeLabel">
+                    <li class="custom-select-option selected" data-value="DEPOSIT" role="option" aria-selected="true">
+                      <div class="option-title">진료비 수납</div>
+                      <div class="option-desc">환자 진료비 본인부담금 수납 대사 및 정산</div>
+                    </li>
+                    <li class="custom-select-option" data-value="PREPAYMENT" role="option" aria-selected="false">
+                      <div class="option-title">선수금(예치금) 수납</div>
+                      <div class="option-desc">입원 중간수납·퇴원 정산·차기 외래 진료비 사전 예치금 대체 수납</div>
+                    </li>
+                    <li class="custom-select-option" data-value="REFUND" role="option" aria-selected="false">
+                      <div class="option-title">진료비 환불금</div>
+                      <div class="option-desc">사후 심사정산 과오납금 적격 수령권자 환불</div>
+                    </li>
+                  </ul>
+                  <select id="inputCaseType" class="form-select-hidden" aria-hidden="true" tabindex="-1">
+                    <option value="DEPOSIT" selected>진료비 수납</option>
+                    <option value="PREPAYMENT">선수금(예치금) 수납</option>
+                    <option value="REFUND">진료비 환불금</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Custom Select 2: 환자와의 관계 -->
+              <div class="form-group">
+                <label class="form-label" id="relationLabel">환자와의 관계</label>
+                <div class="custom-select-wrapper" id="relationSelectWrapper">
+                  <button type="button" class="custom-select-trigger" id="relationTrigger" aria-labelledby="relationLabel"
+                    aria-haspopup="listbox" aria-expanded="false">
+                    <span class="custom-select-value" id="relationValue">직계가족 / 등록 보호자</span>
+                    <svg class="svg-icon custom-select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  <ul class="custom-select-dropdown" id="relationDropdown" role="listbox" aria-labelledby="relationLabel">
+                    <li class="custom-select-option selected" data-value="GUARDIAN" role="option" aria-selected="true">
+                      <div class="option-title">직계가족 / 등록 보호자</div>
+                      <div class="option-desc">원내 HIS에 가족관계 사전 등록 완료된 보호자</div>
+                    </li>
+                    <li class="custom-select-option" data-value="SELF" role="option" aria-selected="false">
+                      <div class="option-title">환자 본인 (수진자)</div>
+                      <div class="option-desc">수진자 본인 명의 계좌 또는 개명 이력 일치자</div>
+                    </li>
+                    <li class="custom-select-option" data-value="HEIR" role="option" aria-selected="false">
+                      <div class="option-title">적격 상속인 (사망환자)</div>
+                      <div class="option-desc">정부24 안심상속 원스톱 서비스 적격 상속권자</div>
+                    </li>
+                    <li class="custom-select-option" data-value="UNKNOWN" role="option" aria-selected="false">
+                      <div class="option-title">기타 대납자 (관계 미등록)</div>
+                      <div class="option-desc">원내 관계 미등록 지인·직장·불명 대납 건 (정밀 소명 대기)</div>
+                    </li>
+                  </ul>
+                  <select id="inputRelation" class="form-select-hidden" aria-hidden="true" tabindex="-1">
+                    <option value="GUARDIAN" selected>직계가족 / 등록 보호자</option>
+                    <option value="SELF">환자 본인 (수진자)</option>
+                    <option value="HEIR">적격 상속인 (사망환자)</option>
+                    <option value="UNKNOWN">기타 대납자 (관계 미등록)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top:2px;">
+                <label class="form-checkbox-label">
+                  <input type="checkbox" id="checkGuardianReg" checked>
+                  <span>원내 HIS에 보호자 관계가 사전 등록되어 있음</span>
+                </label>
+                <label class="form-checkbox-label">
+                  <input type="checkbox" id="checkRenamed">
+                  <span>환자 개명 이력 존재 (주민등록번호 일치)</span>
+                </label>
+                <div class="renamed-details-box" id="renamedDetailsBox" style="display:none;">
+                  <label class="form-label" for="inputPrevPatientName" style="font-size:12px;">
+                    <span>개명 전 과거 등록명 (HIS 이력)</span>
+                    <span class="form-hint">주민등록번호 연계 확인</span>
+                  </label>
+                  <input type="text" id="inputPrevPatientName" class="form-input"
+                    style="padding:6px 10px; font-size:13px;" placeholder="예: 김민지(개명전)" value="김민지(개명전)">
+                </div>
+                <label class="form-checkbox-label">
+                  <input type="checkbox" id="checkDeceased">
+                  <span>환자 사망 등록 상태 (3차 EMR 정밀진단 사망판정)</span>
+                </label>
+                <label class="form-checkbox-label">
+                  <input type="checkbox" id="checkUninsured">
+                  <span>외국인 또는 건강보험 무자격자 (생존 환자 예외 정산)</span>
+                </label>
+                <label class="form-checkbox-label">
+                  <input type="checkbox" id="checkPublicProof">
+                  <span>정부24 안심상속 원스톱 서비스 적격 상속 증빙 제출</span>
+                </label>
+              </div>
+
+              <!-- 수정 저장 / 신규 등록 / 선택 삭제 / 원본 복원 / 초기화 버튼군 -->
+              <div class="form-action-buttons">
+                <button type="button" id="saveTransactionBtn" class="btn-primary sm"
+                  title="현재 수정한 내역을 데이터셋에 즉시 반영하고 통계를 재계산합니다">
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                  </svg>
+                  <span>수정 내역 저장 (데이터셋 반영)</span>
+                </button>
+                <button type="button" id="addNewTransactionBtn" class="btn-secondary sm"
+                  title="현재 입력값으로 신규 트랜잭션을 생성하여 목록에 추가합니다">
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <span>새 트랜잭션 추가</span>
+                </button>
+                <button type="button" id="deleteTransactionBtn" class="btn-danger sm" title="선택된 트랜잭션을 데이터셋에서 완전히 삭제합니다"
+                  disabled>
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                  <span>선택 삭제</span>
+                </button>
+                <button type="button" id="revertTransactionBtn" class="btn-secondary sm"
+                  title="선택된 트랜잭션의 수정 전 최초 원본 데이터로 되돌립니다">
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                  </svg>
+                  <span>원본 복원</span>
+                </button>
+                <button type="button" id="resetFormBtn" class="btn-secondary sm" title="입력 필드를 초기화합니다">
+                  <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  <span>입력 초기화</span>
+                </button>
+              </div>
+
+              <div id="formFeedback" class="form-feedback" role="alert" aria-live="assertive"></div>
+            </form>
+          </div>
+
+          <!-- 모의 데이터셋 테이블 -->
+          <div class="table-card">
+            <div class="table-header-panel">
+              <div class="table-header-top">
+                <div class="table-title-group">
+                  <span class="table-main-title">모의 정산 트랜잭션</span>
+                  <span id="tableCountBadge" class="table-count-badge">전체 150건 중 50건 표시</span>
+                </div>
+                <div class="table-actions-extra">
+                  <button type="button" class="btn-secondary sm" id="exportReconciledCsvBtn"
+                    title="현재 정산 완료된 전체 데이터셋(수정 내역 포함)을 CSV 파일로 다운로드합니다">
+                    <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>결산 CSV</span>
+                  </button>
+                  <label for="csvFileInput" class="btn-secondary sm" style="cursor:pointer;"
+                    title="사용자 CSV 파일 업로드 (Injection 방어 적용)">
+                    <svg class="svg-icon sm" viewBox="0 0 24 24">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>CSV 업로드</span>
+                  </label>
+                  <input type="file" id="csvFileInput" accept=".csv" style="display:none;">
+                  <button type="button" class="btn-secondary sm" id="downloadCsvTemplateBtn" title="모의 테스트용 CSV 템플릿 다운로드">
+                    <svg class="svg-icon sm" viewBox="0 0 24 24">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>템플릿</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-filter-subbar">
+                <div class="filter-btn-group" role="tablist" aria-label="데이터 필터">
+                  <button type="button" class="filter-chip active" data-filter="all">전체</button>
+                  <button type="button" class="filter-chip" data-filter="deposit">진료비수납</button>
+                  <button type="button" class="filter-chip" data-filter="prepayment">선수금(예치금)</button>
+                  <button type="button" class="filter-chip" data-filter="refund">진료비 환불금</button>
+                  <button type="button" class="filter-chip" data-filter="unidentified">기존미식별</button>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                  <div class="table-search-box">
+                    <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="tableSearchInput" placeholder="ID, 환자명, 입금자명, 금액 검색..."
+                      class="table-search-input" aria-label="테이블 트랜잭션 검색">
+                    <button type="button" id="clearSearchBtn" class="clear-search-btn" aria-label="검색어 지우기"
+                      style="display:none;">
+                      <svg class="svg-icon sm" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  <button type="button" class="btn-toolbar" id="btnToggleTableViewMode" style="font-size:12px; height:34px; padding:0 10px;">
+                    <span id="tableViewModeText">전체 열 보기 (스크롤)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="table-scroll-hint" id="tableScrollHint">
+              <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:4px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span id="tableScrollHintText"><strong>3대 정산 금액 체계</strong>(①원납부/선수금 &rarr; ②심평원확정 &rarr; ③환불금)와 단축 소요일수가 한눈에 정렬됩니다.</span>
+            </div>
+
+            <div class="table-responsive" id="tableResponsiveWrap">
+              <table class="data-table" id="mainDataTable" aria-label="정산 데이터셋 목록">
+                <thead id="mainTableHead">
+                  <!-- Dynamically rendered according to viewMode (Compact vs Full) -->
+                </thead>
+                <tbody id="sampleTableBody">
+                  <!-- Data loaded via app.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-pagination-bar" id="tablePaginationBar">
+              <span class="pagination-info" id="paginationInfo">1 - 50건 표시 중</span>
+              <div class="pagination-actions">
+                <button type="button" class="btn-secondary sm" id="loadMoreRowsBtn">50건 더보기</button>
+                <button type="button" class="btn-secondary sm" id="showAllRowsBtn">전체 보기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [파트 04] 대학병원 5,000건 대규모 모의 데이터 시뮬레이션 & 무작위 표본추출 센터 -->
+    <div class="accordion-item expanded" id="accordionPart4">
+      <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart4">
+        <div class="accordion-header-left">
+          <span class="part-badge">파트 04</span>
+          <div class="accordion-title-wrap">
+            <h2 class="accordion-title">
+              <span class="section-step-num">통계 01</span>
+              대학병원 5,000건 모의 시뮬레이션 &amp; 무작위 표본추출 센터
+            </h2>
+            <span class="accordion-subtitle">상급종합병원 연간 5,000건 진료비 예외 발생 모형 기반 단순 무작위 표본추출 (SRS)</span>
+          </div>
+        </div>
+        <div class="accordion-header-right">
+          <span class="accordion-status-badge active" id="badgePart4">5,000건 로드됨</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="accordion-content" id="accordionContentPart4" role="region" aria-labelledby="accordionPart4">
+        <div class="stats-control-panel">
+          <div class="stats-control-left">
+            <label class="stats-select-label" for="sampleSizeSelect">무작위 표본 크기 (n):</label>
+            <select id="sampleSizeSelect" class="stats-select">
+              <option value="300">n = 300건 (빠른 검정)</option>
+              <option value="500" selected>n = 500건 (표준 신뢰수준 권장)</option>
+              <option value="1000">n = 1,000건 (대규모 표본)</option>
+              <option value="2000">n = 2,000건 (정밀 검정)</option>
+              <option value="5000">n = 5,000건 (모집단 전수 분석)</option>
+            </select>
+            <button type="button" class="btn-primary" id="btnRunSampling">
+              <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              <span>무작위 표본추출 &amp; 전체 통계 분석 실행</span>
+            </button>
+          </div>
+          <div class="stats-control-right">
+            <button type="button" class="btn-secondary sm" id="btnLoadHospitalToTable" title="현재 선별된 표본 데이터를 상단 트랜잭션 테이블로 전환하여 브라우징">
+              <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+              <span>표본을 메인 테이블에 로드 / 전환</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 대학병원 5,000건 통계 요약 KPI 카드 -->
+        <div class="stats-stat-summary-bar">
+          <div class="stats-kpi-card">
+            <span class="stats-kpi-title">대학병원 연간 모의 모집단</span>
+            <span class="stats-kpi-val" id="kpiPopTotal">5,000건</span>
+            <span class="stats-kpi-desc">수납 55% · 선수금 25% · 환불 20%</span>
+          </div>
+          <div class="stats-kpi-card">
+            <span class="stats-kpi-title">현재 선별 표본 크기 (SRS)</span>
+            <span class="stats-kpi-val" id="kpiSampleSize" style="color:var(--primary);">n = 500건</span>
+            <span class="stats-kpi-desc">비복원 단순무작위 표본추출</span>
+          </div>
+          <div class="stats-kpi-card">
+            <span class="stats-kpi-title">표본 미식별 식별률</span>
+            <span class="stats-kpi-val" id="kpiSampleRate" style="color:var(--success);">85.4%</span>
+            <span class="stats-kpi-desc">기존 단순대조 18.2% 대비 +67.2%p</span>
+          </div>
+          <div class="stats-kpi-card">
+            <span class="stats-kpi-title">표본 평균 단축 소요일</span>
+            <span class="stats-kpi-val" id="kpiSampleDays" style="color:var(--success);">-128.3일</span>
+            <span class="stats-kpi-desc">기존 138.0일 → 제안모형 9.7일</span>
+          </div>
+        </div>
+
+        <div class="chart-analysis-note">
+          <strong>[대학병원 시뮬레이션 환경 구성]</strong>
+          약 1,000병상 규모 상급종합병원의 연간 원무과 진료비 예외 발생 규모 5,000건을 정밀 재현하였습니다.
+          진료비 수납(보호자 대납 60%, 환자 개명 20%, 타인송금), 선수금·예치금 수납, 사후 진료비 환불금(사망환자 사후 환불 400건, 외국인·건보 무자격자 150건, 과오납 450건)이 포함되어 있으며,
+          2차 단계의 섣부른 사망 판단을 배제하고 3차 EMR 정밀진단을 거쳐 적법 상속인 및 예외 환불이 종결되도록 구현되었습니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- [파트 05] 데이터 적격성 교차검증 (과대적합 / 과소적합 정밀 진단) -->
+    <div class="accordion-item expanded" id="accordionPart5">
+      <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart5">
+        <div class="accordion-header-left">
+          <span class="part-badge">파트 05</span>
+          <div class="accordion-title-wrap">
+            <h2 class="accordion-title">
+              <span class="section-step-num">통계 02</span>
+              데이터 적격성 교차검증 (5-Fold CV · 과대적합/과소적합 진단)
+            </h2>
+            <span class="accordion-subtitle">Train vs Validation 학습 성능 비교, 일반화 격차(Generalization Gap) 통계적 검증</span>
+          </div>
+        </div>
+        <div class="accordion-header-right">
+          <span class="accordion-status-badge active" id="badgePart5">적정 적합 판정 완료</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="accordion-content" id="accordionContentPart5" role="region" aria-labelledby="accordionPart5">
+        <div class="stats-chart-card">
+          <div class="chart-card-header">
+            <div class="chart-title-area">
+              <h4>5-Fold 교차검증 Train vs Validation 성능 비교 차트</h4>
+              <p>각 Fold별 훈련 데이터(80%)와 검증 데이터(20%)의 모델 식별 정확도(Accuracy) 및 손실(Loss) 평가</p>
+            </div>
+            <span class="badge badge-success" id="cvStatusBadge">Optimal Fit (적정 적합)</span>
+          </div>
+
+          <div class="chart-canvas-wrap">
+            <canvas id="chartCvCanvas" class="chart-canvas" width="600" height="240"></canvas>
+          </div>
+
+          <!-- CV Folds 상세 테이블 -->
+          <div class="stats-table-wrap" style="margin-top: 16px;">
+            <table class="stats-table" aria-label="5-Fold 교차검증 세부 결과">
+              <thead>
+                <tr>
+                  <th scope="col">Fold 분할</th>
+                  <th scope="col">Train 크기</th>
+                  <th scope="col">Val 크기</th>
+                  <th scope="col">Train 정확도</th>
+                  <th scope="col">Val 정확도</th>
+                  <th scope="col">F1-Score</th>
+                  <th scope="col">Cross-Entropy Loss</th>
+                  <th scope="col">일반화 격차(Gap)</th>
+                </tr>
+              </thead>
+              <tbody id="cvTableBody">
+                <!-- Data loaded via app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="chart-analysis-note success" id="cvDiagnosisText">
+            <!-- Dynamically generated diagnosis -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [파트 06] 표본분포 기술통계 분석 (표본 평균, 분산, 표준편차, 95% CI, 왜도, 첨도) -->
+    <div class="accordion-item expanded" id="accordionPart6">
+      <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart6">
+        <div class="accordion-header-left">
+          <span class="part-badge">파트 06</span>
+          <div class="accordion-title-wrap">
+            <h2 class="accordion-title">
+              <span class="section-step-num">통계 03</span>
+              표본분포 기술통계 분석 (평균 · 분산 · 표준편차 · 95% CI · 정규분포 적합)
+            </h2>
+            <span class="accordion-subtitle">미식별 입금 및 환불금 잔류 소요일수 표본분포 히스토그램 및 중심극한정리(CLT) 검토</span>
+          </div>
+        </div>
+        <div class="accordion-header-right">
+          <span class="accordion-status-badge active">표본분포 분석완료</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="accordion-content" id="accordionContentPart6" role="region" aria-labelledby="accordionPart6">
+        <div class="stats-chart-card">
+          <div class="chart-card-header">
+            <div class="chart-title-area">
+              <h4 id="distChartTitle">미식별 입금 처리 소요일수 표본분포 히스토그램 및 적합 곡선</h4>
+              <p id="distChartDesc">※ 제안 모델 도입으로 대다수 케이스가 0~5일 이내 신속 처리되어 좌측으로 치우친 형태(양의 왜도)를 띱니다. 통계학적 완전 정규분포(종 모양)는 우측 'CLT 표본평균 정규분포' 버튼을 통해 확인하실 수 있습니다.</p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="btn-toolbar" id="btnToggleCltMode" style="font-size:12px; font-weight:700; color:var(--primary);">
+                <svg class="svg-icon sm" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg>
+                <span id="cltModeBtnText">CLT 표본평균 정규분포(Bell Curve)로 전환</span>
+              </button>
+              <button type="button" class="btn-toolbar" id="btnToggleDistVar" style="font-size:12px;">
+                <span>환불금 잔류일 분포로 전환</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="chart-canvas-wrap">
+            <canvas id="chartDistCanvas" class="chart-canvas" width="600" height="240"></canvas>
+          </div>
+
+          <!-- 핵심 변수 기술통계 테이블 -->
+          <div class="stats-table-wrap" style="margin-top: 16px;">
+            <table class="stats-table" aria-label="표본분포 기술통계 수치">
+              <thead>
+                <tr>
+                  <th scope="col">분석 변수</th>
+                  <th scope="col">표본수 (n)</th>
+                  <th scope="col">표본 평균 (x̄)</th>
+                  <th scope="col">표본 분산 (s²)</th>
+                  <th scope="col">표본 표준편차 (s)</th>
+                  <th scope="col">표준오차 (SE)</th>
+                  <th scope="col">95% 신뢰구간 (CI)</th>
+                  <th scope="col">중앙값 (IQR)</th>
+                  <th scope="col">왜도 / 첨도</th>
+                </tr>
+              </thead>
+              <tbody id="distTableBody">
+                <!-- Data loaded via app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="chart-analysis-note">
+            <strong>[표본분포 해석 요약]</strong>
+            제안 모형 적용 시 미식별 입금 처리 소요일수의 표본 평균은 9.7일(표준편차 3.8일, SE 0.17일)로, 기존 단순대조 방식의 평균 137.9일(표준편차 24.1일) 대비
+            분포의 중심 위치가 좌측으로 현저히 이동하였으며, 95% 신뢰구간에서 오차 범위가 매우 좁아 높은 추정 정밀도를 입증합니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [파트 07] 4대 핵심 가설 검정 (가설 6.1 ~ 6.4) -->
+    <div class="accordion-item expanded" id="accordionPart7">
+      <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart7">
+        <div class="accordion-header-left">
+          <span class="part-badge">파트 07</span>
+          <div class="accordion-title-wrap">
+            <h2 class="accordion-title">
+              <span class="section-step-num">통계 04</span>
+              4대 핵심 가설 검정 (가설 6.1 ~ 6.4 통계적 유의성 검정)
+            </h2>
+            <span class="accordion-subtitle">식별 성공률 상승 · 처리 소요일 감소 · 적격 확인율 상승 · 환불 잔류일 감소 실증</span>
+          </div>
+        </div>
+        <div class="accordion-header-right">
+          <span class="accordion-status-badge active">4대 가설 모두 채택</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="accordion-content" id="accordionContentPart7" role="region" aria-labelledby="accordionPart7">
+        <div class="stats-chart-card">
+          <div class="chart-card-header">
+            <div class="chart-title-area">
+              <h4>4대 핵심 가설 검정 비교 막대 및 통계적 유의수준 차트</h4>
+              <p>기존 단순대조(Legacy) vs 제안 교차검증(Proposed) 모형의 지표 비교 (*** p &lt; 0.001)</p>
+            </div>
+          </div>
+
+          <div class="chart-canvas-wrap">
+            <canvas id="chartHypCanvas" class="chart-canvas" width="600" height="240"></canvas>
+          </div>
+        </div>
+
+        <!-- 4개 가설 상세 카드 그리드 -->
+        <div class="hyp-grid" id="hypGridContainer">
+          <!-- Dynamically filled via app.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- [파트 08] 고급 통계 및 경제성 심층 분석 (카플란-마이어, 로지스틱 회귀, 부트스트랩, ROI) -->
+    <div class="accordion-item expanded" id="accordionPart8">
+      <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart8">
+        <div class="accordion-header-left">
+          <span class="part-badge">파트 08</span>
+          <div class="accordion-title-wrap">
+            <h2 class="accordion-title">
+              <span class="section-step-num">통계 05</span>
+              고급 통계 &amp; 대학병원 경제성 심층 분석
+            </h2>
+            <span class="accordion-subtitle">카플란-마이어 생존분석 · 다중 로지스틱 회귀(OR) · 비모수 부트스트랩 · ROI 분석</span>
+          </div>
+        </div>
+        <div class="accordion-header-right">
+          <span class="accordion-status-badge active">심층 분석 완료</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="accordion-content" id="accordionContentPart8" role="region" aria-labelledby="accordionPart8">
+        <!-- 8.1 카플란-마이어 생존분석 & 8.2 다중 로지스틱 회귀분석 그리드 -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px; margin-bottom:20px;">
+          <!-- 8.1 카플란-마이어 생존곡선 -->
+          <div class="stats-chart-card" style="margin-bottom:0;">
+            <div class="chart-card-header">
+              <div class="chart-title-area">
+                <h4>1. 카플란-마이어 생존분석 (정산 잔류율 곡선)</h4>
+                <p>소요일수 경과에 따른 미정산 잔류 확률 S(t) 비교 (Log-Rank χ²=412.8, p &lt; 0.001)</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="chartSurvivalCanvas" class="chart-canvas" width="500" height="230"></canvas>
+            </div>
+            <div class="chart-analysis-note success" style="margin-top:12px;">
+              <strong>[생존분석 해석]</strong>
+              미정산 건이 50% 해소되는 중위 잔류기간(Median Survival Time)이 기존 138일에서 제안모형 7일로 대폭 단축되어 행정 지연이 원천 해소됨을 증명합니다.
+            </div>
+          </div>
+
+          <!-- 8.2 다중 로지스틱 회귀분석 포레스트 플롯 -->
+          <div class="stats-chart-card" style="margin-bottom:0;">
+            <div class="chart-card-header">
+              <div class="chart-title-area">
+                <h4>2. 다중 로지스틱 회귀분석 (오즈비 포레스트 플롯)</h4>
+                <p>정산 식별 성공을 결정짓는 핵심 독립변수들의 승산비(Odds Ratio [95% CI])</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="chartForestCanvas" class="chart-canvas" width="500" height="230"></canvas>
+            </div>
+            <div class="chart-analysis-note success" style="margin-top:12px;">
+              <strong>[로지스틱 회귀 해석]</strong>
+              [공공 안심상속 증빙](OR=47.0)과 [HIS 보호자 등록](OR=30.6), [개명 교차이력](OR=23.3)이 미식별 입금 및 사망환자 환불금 해결에 가장 결정적인 영향력을 행사함을 입증합니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- 8.3 부트스트랩 비모수 검정 & 8.4 대학병원 경제성 ROI 분석 -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+          <!-- 8.3 부트스트랩 재표본 검정 -->
+          <div class="stats-chart-card" style="margin-bottom:0;">
+            <div class="chart-card-header">
+              <div class="chart-title-area">
+                <h4>3. 비모수 부트스트랩 1,000회 재표본 검정 (B=1,000)</h4>
+                <p>비정규 의료비 소요일수 데이터에 대한 경험적 95% 신뢰구간(Empirical BCa CI) 도출</p>
+              </div>
+            </div>
+            <div class="stats-kpi-card" style="border:none; padding:10px 0; box-shadow:none;">
+              <span class="stats-kpi-title">부트스트랩 평균 소요일 절감 효과</span>
+              <span class="stats-kpi-val" id="bootMeanVal" style="color:var(--primary); font-size:26px;">128.4일 절감</span>
+              <span class="stats-kpi-desc" id="bootCiVal">95% 신뢰구간: [126.1일, 130.8일] (B=1,000회 반복)</span>
+            </div>
+            <div class="chart-analysis-note">
+              의료비 데이터의 긴 꼬리(Right-skewed) 비정규 분포 특성에도 불구하고, 1,000회 복원 추출 결과 평균 128일 이상의 소요일 단축 효과가 견고하게 유지됩니다.
+            </div>
+          </div>
+
+          <!-- 8.4 경제성 ROI 분석 -->
+          <div class="roi-card" style="margin-bottom:0;">
+            <div class="chart-card-header" style="margin-bottom:8px;">
+              <div class="chart-title-area">
+                <h4 style="color:var(--success);">4. 대학병원 행정 경제성 및 ROI 분석 (연간 5,000건)</h4>
+                <p>상급종합병원 원무과 행정 소요 시간 및 분쟁 비용 절감 편익 정량화</p>
+              </div>
+            </div>
+            <div class="roi-grid">
+              <div class="roi-item">
+                <div class="roi-item-title">연간 행정 절감 시간</div>
+                <div class="roi-item-val" id="roiHoursVal">21,000시간</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">약 9.8 M/M 인력 여력 확보</div>
+              </div>
+              <div class="roi-item">
+                <div class="roi-item-title">원무 행정 인건비 절감액</div>
+                <div class="roi-item-val" id="roiLaborVal">1억 8,480만 원</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">건당 4.2시간 절감 환산</div>
+              </div>
+              <div class="roi-item">
+                <div class="roi-item-title">미환급 지연이자·공탁 방지</div>
+                <div class="roi-item-val" id="roiLegalVal">4,200만 원</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">상법 6% 지연이자 및 법원 공탁</div>
+              </div>
+              <div class="roi-item" style="border-color:var(--success); background:var(--success-light);">
+                <div class="roi-item-title" style="color:var(--success); font-weight:700;">연간 총 경제적 효익</div>
+                <div class="roi-item-val" id="roiTotalVal">2억 2,680만 원</div>
+                <div style="font-size:11px; color:var(--success); font-weight:600; margin-top:2px;">ROI 1,420% 달성</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 원무 감사 리포트 발급 모달 (BRB-C02 Task 3) -->
+  <div class="modal-overlay" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <span>원무 결산 진료비 예외정산 감사 증적 보고서</span>
+        </h3>
+        <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="닫기">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body" id="reportBodyContent">
+        <!-- Dynamically filled by app.js -->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="modalCancelBtn">닫기</button>
+        <button type="button" class="btn-primary" id="printReportBtn">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>보고서 인쇄 / PDF 저장</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 의료정보보호 감사 & 외부 SIEM 실시간 연동 센터 모달 -->
+  <div class="modal-overlay" id="siemModal" role="dialog" aria-modal="true" aria-labelledby="siemModalTitle">
+    <div class="modal-card" style="max-width: 820px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="siemModalTitle">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>의료정보보호 감사 & 외부 SIEM 실시간 연계 센터</span>
+        </h3>
+        <button type="button" class="modal-close-btn" id="siemModalCloseBtn" aria-label="닫기">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body" style="gap: 16px;">
+        <!-- SIEM 통신 상태 메트릭 바 -->
+        <div class="siem-status-card">
+          <div class="siem-status-row">
+            <div class="siem-status-item">
+              <span class="siem-lbl">연계 프로토콜</span>
+              <strong class="siem-val">Syslog RFC 5424 / Splunk HEC JSON</strong>
+            </div>
+            <div class="siem-status-item">
+              <span class="siem-lbl">원격 SIEM 수집 서버</span>
+              <strong class="siem-val">https://siem.hospital-audit.internal:8088/services/collector/raw</strong>
+            </div>
+            <div class="siem-status-item">
+              <span class="siem-lbl">보안 전송 규격</span>
+              <span class="siem-badge active">● HTTPS / TLS 1.3 암호화 스트림 활성화</span>
+            </div>
+          </div>
+          <div class="siem-operator-bar">
+            <span><strong>접속 작업자:</strong> EMP-2026-MED01 (원무과 수납정산팀 / 오하율)</span>
+            <span><strong>보안 인증:</strong> PIPA 제29조 안전성확보 조치 이행 (HMAC-SHA256 전자서명)</span>
+          </div>
+        </div>
+
+        <!-- 실시간 SIEM 감사 이벤트 스트림 터미널 -->
+        <div class="siem-terminal-wrap">
+          <div class="siem-terminal-header">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="siem-dot red"></span>
+              <span class="siem-dot yellow"></span>
+              <span class="siem-dot green"></span>
+              <span style="font-size:11.5px; font-weight:700; color:#94a3b8; margin-left:6px;">LIVE AUDIT TELEMETRY
+                STREAM (RFC 5424 / ECS JSON)</span>
+            </div>
+            <button type="button" class="siem-btn-sub" id="refreshSiemLogBtn" title="최신 로그 갱신">
+              <svg class="svg-icon sm" viewBox="0 0 24 24" style="width:12px; height:12px;">
+                <path d="M23 4v6h-6M1 20v-6h6"></path>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              <span>로그 새로고침</span>
+            </button>
+          </div>
+          <pre id="siemTerminalLogs" class="siem-terminal-body" tabindex="0" aria-label="SIEM 실시간 로그 콘솔"></pre>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content: space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn-primary" id="sendSiemTelemetryBtn">
+            <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span>SIEM 서버로 즉시 전송 테스트 (Mock API)</span>
+          </button>
+          <button type="button" class="btn-secondary" id="exportSiemLogBtn">
+            <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>SIEM 감사 로그 다운로드 (.json)</span>
+          </button>
+        </div>
+        <button type="button" class="btn-secondary" id="siemModalCancelBtn">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 트랜잭션 영구 삭제 커스텀 확인 다이얼로그 모달 -->
+  <div class="modal-overlay" id="confirmDeleteModal" role="dialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
+    <div class="modal-card confirm-card" role="document">
+      <div class="confirm-modal-top">
+        <div class="confirm-modal-icon-badge">
+          <svg class="svg-icon lg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </div>
+        <div class="confirm-modal-title-wrap">
+          <h3 class="confirm-modal-title" id="confirmDeleteTitle">트랜잭션 영구 삭제 확인</h3>
+          <p class="confirm-modal-sub">선택한 데이터를 정산 데이터셋에서 완전히 삭제합니다.</p>
+        </div>
+        <button type="button" class="modal-close-btn" id="confirmDeleteCloseBtn" aria-label="닫기">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="confirm-modal-body">
+        <div class="confirm-target-info" id="confirmDeleteTargetInfo">
+          <!-- 동적으로 트랜잭션 상세 정보 렌더링 -->
+        </div>
+        <div class="confirm-alert-box">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>삭제 후 즉시 복구할 수 없으며, 의료정보보호 SIEM 감사 로그에 <strong>영구 삭제(WARN)</strong>로 실시간 기록됩니다.</span>
+        </div>
+      </div>
+
+      <div class="confirm-modal-footer">
+        <button type="button" class="btn-secondary" id="confirmDeleteCancelBtn">취소</button>
+        <button type="button" class="btn-danger" id="confirmDeleteProceedBtn">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          <span>데이터셋에서 완전히 삭제</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 알림 컨테이너 -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- 스크립트 모듈 로드 (순서 유지: Data -> Pipeline Engine -> Stats Engine -> Main App Controller) -->
+  <script src="js/data.js"></script>
+  <script src="js/pipeline.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -94,6 +94,17 @@ assert('오버플로 줄바꿈 가드(overflow-wrap: break-word) 전역 적용',
 assert('768px 미디어 쿼리 내 아코디언 헤더 모바일 스택 레이아웃 탑재', cssContent.includes('.accordion-header') && cssContent.includes('padding-right: 32px;'));
 assert('통계 테이블 가로 스크롤 및 터치 스크롤링(-webkit-overflow-scrolling: touch) 지원', cssContent.includes('-webkit-overflow-scrolling: touch;'));
 assert('히어로 배너 모바일 줄바꿈 가독성 개선 규칙 탑재', cssContent.includes('.hero-purpose-statement'));
+// 6. README.md 문서 최신화 및 무결성 검증
+console.log('\n[6] README.md 문서 최신화 및 무결성 검증');
+const readmePath = path.join(rootDir, 'README.md');
+assert('README.md 파일 존재 확인', fs.existsSync(readmePath));
+const readmeContent = fs.readFileSync(readmePath, 'utf8');
+
+assert('README.md 내 정식 논문 PDF 및 research_paper 산출물 문서화 확인', readmeContent.includes('research_paper/') && readmeContent.includes('논문 PDF 다운로드'));
+assert('README.md 내 js/stats.js 및 5대 학술 실증 통계 캔버스 모델 문서화 확인', readmeContent.includes('js/stats.js') && readmeContent.includes('5-Fold 교차검증') && readmeContent.includes('ROI'));
+assert('README.md 내 모바일/반응형 뷰포트 및 줄바꿈 가독성 가드 문서화 확인', readmeContent.includes('word-break: keep-all') && readmeContent.includes('아코디언 모바일 수직 스택'));
+assert('README.md 내 자동화 무결성 검증 스크립트 실행 가이드 수록 확인', readmeContent.includes('node scripts/verify_medimatch_integrity.js'));
+assert('README.md 내 메인 포트폴리오(SKT_ALEPH) 공식 URL 수록 확인', readmeContent.includes('https://hayul0611.github.io/SKT_ALEPH/'));
 
 console.log('\n======================================================================');
 console.log('                     종합 검증 결과 요약                     ');

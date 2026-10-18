@@ -1065,67 +1065,106 @@
         var width = rect.width || canvas.width || 600;
         var height = rect.height || canvas.height || 260;
 
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
         var ctx = canvas.getContext('2d');
         ctx.scale(dpr, dpr);
-        return { ctx: ctx, width: width, height: height };
+        return { ctx: ctx, width: width, height: height, dpr: dpr, isMobile: width < 520 };
       },
 
       /**
-       * 공통 유틸: 절대 겹치지 않는 스마트 범례(Legend) 렌더러
-       * 각 항목의 폭을 measureText로 정밀 측정하고 오른쪽 정렬로 자동 배치
+       * 공통 유틸: 절대 겹치거나 잘리지 않는 반응형 스마트 범례(Legend) 렌더러
+       * 모바일/데스크톱 너비에 따라 레이블 자동 단축 및 자동 2줄 래핑 지원
        */
       _drawLegend: function (ctx, items, totalW, y, isDark) {
-        ctx.font = '11px sans-serif';
+        var isMobile = totalW < 520;
+        var fontSize = isMobile ? 10 : 11;
+        ctx.font = fontSize + 'px -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif';
         var textColor = isDark ? '#e2e8f0' : '#475569';
-        var gap = 20; // 범례 항목 간 여백
-        var iconW = 12;
-        var iconTextGap = 6;
+        var gap = isMobile ? 12 : 20;
+        var iconW = isMobile ? 10 : 12;
+        var iconTextGap = 5;
 
-        // 전체 범례 소요 너비 계산
-        var widths = items.map(function (item) {
-          var textW = ctx.measureText(item.label).width;
-          return iconW + iconTextGap + textW;
+        // 항목별 라벨 선정 (모바일 전용 라벨 존재 시 자동 사용)
+        var processedItems = items.map(function (it) {
+          var label = (isMobile && it.mobileLabel) ? it.mobileLabel : it.label;
+          var textW = ctx.measureText(label).width;
+          return {
+            label: label,
+            color: it.color,
+            isLine: it.isLine,
+            itemW: iconW + iconTextGap + textW
+          };
         });
-        var totalLegendW = widths.reduce(function (a, b) { return a + b; }, 0) + (items.length - 1) * gap;
 
-        // 오른쪽 기준 시작 X좌표 (우측 20px 마진 확보)
-        var startX = totalW - totalLegendW - 24;
-        if (startX < 50) startX = 50; // 좌측 최소 마진
+        var totalLegendW = processedItems.reduce(function (a, b) { return a + b.itemW; }, 0) + (processedItems.length - 1) * gap;
+
+        // 너비가 부족하여 1줄에 들어가지 않는 경우: 2줄 렌더링
+        if (totalLegendW > totalW - 24) {
+          var line1 = [processedItems[0]];
+          var line2 = processedItems.slice(1);
+          var renderLine = function (lineItems, lineY) {
+            var lineW = lineItems.reduce(function (a, b) { return a + b.itemW; }, 0) + (lineItems.length - 1) * gap;
+            var curX = Math.max(16, totalW - lineW - 16);
+            for (var i = 0; i < lineItems.length; i++) {
+              var it = lineItems[i];
+              ctx.fillStyle = it.color;
+              ctx.strokeStyle = it.color;
+              if (it.isLine) {
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(curX, lineY + 5);
+                ctx.lineTo(curX + iconW, lineY + 5);
+                ctx.stroke();
+              } else {
+                ctx.fillRect(curX, lineY, iconW, iconW);
+              }
+              ctx.fillStyle = textColor;
+              ctx.textAlign = 'left';
+              ctx.fillText(it.label, curX + iconW + iconTextGap, lineY + 9);
+              curX += it.itemW + gap;
+            }
+          };
+          renderLine(line1, y - 6);
+          renderLine(line2, y + 10);
+          return;
+        }
+
+        // 1줄 정상 렌더링: 우측 정렬
+        var startX = totalW - totalLegendW - 20;
+        if (startX < 16) startX = 16;
 
         var curX = startX;
-        for (var i = 0; i < items.length; i++) {
-          var it = items[i];
-          // 아이콘 (선 또는 사각형)
+        for (var i = 0; i < processedItems.length; i++) {
+          var it = processedItems[i];
           ctx.fillStyle = it.color;
           ctx.strokeStyle = it.color;
           if (it.isLine) {
             ctx.lineWidth = 2.5;
             ctx.beginPath();
-            ctx.moveTo(curX, y + 6);
-            ctx.lineTo(curX + iconW, y + 6);
+            ctx.moveTo(curX, y + 5);
+            ctx.lineTo(curX + iconW, y + 5);
             ctx.stroke();
           } else {
             ctx.fillRect(curX, y, iconW, iconW);
           }
 
-          // 라벨 텍스트
           ctx.fillStyle = textColor;
           ctx.textAlign = 'left';
-          ctx.fillText(it.label, curX + iconW + iconTextGap, y + 10);
+          ctx.fillText(it.label, curX + iconW + iconTextGap, y + 9);
 
-          curX += widths[i] + gap;
+          curX += it.itemW + gap;
         }
       },
 
-      // 7.1. 교차검증 Train vs Val 차트 (상단 105% 헤드룸 확보로 100.0% 수치 선명 노출)
+      // 7.1. 교차검증 Train vs Val 차트 (두 막대 수치 분리 렌더링 & 모바일 헤드룸 확보)
       renderCvChart: function (canvas, cvData) {
         var setup = this._setupCanvas(canvas);
         if (!setup || !cvData) return;
         var ctx = setup.ctx;
         var w = setup.width;
         var h = setup.height;
+        var isMobile = setup.isMobile;
 
         ctx.clearRect(0, 0, w, h);
 
@@ -1133,20 +1172,20 @@
         var textColor = isDark ? '#e2e8f0' : '#475569';
         var gridColor = isDark ? 'rgba(51, 65, 85, 0.7)' : '#e2e8f0';
 
-        var padding = { top: 52, right: 30, bottom: 40, left: 55 };
+        var padding = { top: isMobile ? 54 : 52, right: isMobile ? 18 : 30, bottom: 42, left: isMobile ? 48 : 55 };
         var chartW = w - padding.left - padding.right;
         var chartH = h - padding.top - padding.bottom;
 
-        // 1. 범례 (상단 y=16에 단독 배치)
+        // 1. 범례 (모바일 시 레이블 스마트 최적화)
         this._drawLegend(ctx, [
-          { label: 'Train 정확도', color: '#0284c7' },
-          { label: 'Val 검증 정확도', color: '#10b981' }
+          { label: 'Train 정확도', mobileLabel: 'Train', color: '#0284c7' },
+          { label: 'Val 검증 정확도', mobileLabel: 'Val 검증', color: '#10b981' }
         ], w, 16, isDark);
 
-        // 2. Y축 그리드 (70% ~ 105% 스케일, 100% 상단에 넉넉한 레이블 헤드룸 확보)
+        // 2. Y축 그리드 (70% ~ 105% 스케일)
         var minY = 70;
         var maxY = 105;
-        var rangeY = maxY - minY; // 35%p
+        var rangeY = maxY - minY;
 
         ctx.strokeStyle = gridColor;
         ctx.lineWidth = 1;
@@ -1161,24 +1200,24 @@
           ctx.stroke();
 
           ctx.fillStyle = textColor;
-          ctx.font = '11px sans-serif';
+          ctx.font = (isMobile ? '10px' : '11px') + ' sans-serif';
           ctx.textAlign = 'right';
-          ctx.fillText(yVal.toFixed(0) + '.0%', padding.left - 8, y + 4);
+          ctx.fillText(yVal.toFixed(0) + '%', padding.left - 6, y + 4);
         }
 
         var folds = cvData.folds;
         var numFolds = folds.length;
         var stepX = chartW / (numFolds + 1);
 
-        // 3. Train bars & Val bars
-        var barW = 18;
+        // 3. Train bars & Val bars (반응형 막대 너비)
+        var barW = isMobile ? Math.max(9, Math.min(13, (stepX - 8) / 2)) : Math.max(14, Math.min(20, (stepX - 16) / 2));
         for (var i = 0; i < numFolds; i++) {
           var fold = folds[i];
           var xCenter = padding.left + (i + 1) * stepX;
 
           // X축 라벨
           ctx.fillStyle = textColor;
-          ctx.font = '12px sans-serif';
+          ctx.font = (isMobile ? '10.5px' : '12px') + ' sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('Fold ' + fold.fold, xCenter, h - padding.bottom + 20);
 
@@ -1187,20 +1226,32 @@
           var trainBarH = Math.min(chartH, trainFrac * chartH);
           var trainBarY = padding.top + chartH - trainBarH;
           ctx.fillStyle = '#0284c7';
-          ctx.fillRect(xCenter - barW - 2, trainBarY, barW, trainBarH);
+          ctx.fillRect(xCenter - barW - 1, trainBarY, barW, trainBarH);
 
           // Val Bar
           var valFrac = Math.max(0, (fold.valAccuracy - minY) / rangeY);
           var valBarH = Math.min(chartH, valFrac * chartH);
           var valBarY = padding.top + chartH - valBarH;
           ctx.fillStyle = '#10b981';
-          ctx.fillRect(xCenter + 2, valBarY, barW, valBarH);
+          ctx.fillRect(xCenter + 1, valBarY, barW, valBarH);
 
-          // 정확도 수치 라벨: 막대 바로 위 넉넉한 공간에 선명하고 굵은 글씨로 렌더링
-          ctx.fillStyle = isDark ? '#ffffff' : '#0f172a';
-          ctx.font = 'bold 11px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(fold.valAccuracy.toFixed(1) + '%', xCenter + 2 + barW / 2, valBarY - 6);
+          // 정확도 수치 라벨: 겹침 방지 스마트 분리 렌더링
+          if (isMobile) {
+            // 모바일: 막대 상단에 단일 대표 검증값 선명 표기 (글자 겹침 원천 차단)
+            ctx.fillStyle = isDark ? '#34d399' : '#059669';
+            ctx.font = 'bold 9.5px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(fold.valAccuracy.toFixed(1) + '%', xCenter, Math.min(trainBarY, valBarY) - 5);
+          } else {
+            // 데스크톱: 두 수치 모두 막대별 상단에 개별 색상으로 정확히 배치
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillStyle = isDark ? '#38bdf8' : '#0284c7';
+            ctx.textAlign = 'center';
+            ctx.fillText(fold.trainAccuracy.toFixed(1) + '%', xCenter - barW / 2 - 1, trainBarY - 6);
+
+            ctx.fillStyle = isDark ? '#34d399' : '#059669';
+            ctx.fillText(fold.valAccuracy.toFixed(1) + '%', xCenter + barW / 2 + 1, valBarY - 6);
+          }
         }
       },
 
@@ -1212,23 +1263,26 @@
         var ctx = setup.ctx;
         var w = setup.width;
         var h = setup.height;
+        var isMobile = setup.isMobile;
 
         ctx.clearRect(0, 0, w, h);
         var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         var textColor = isDark ? '#e2e8f0' : '#475569';
         var gridColor = isDark ? 'rgba(51, 65, 85, 0.7)' : '#e2e8f0';
 
-        var padding = { top: 52, right: 30, bottom: 40, left: 55 };
+        var padding = { top: isMobile ? 54 : 52, right: isMobile ? 18 : 30, bottom: 42, left: isMobile ? 48 : 55 };
         var chartW = w - padding.left - padding.right;
         var chartH = h - padding.top - padding.bottom;
 
-        // 1. 범례 (상단 y=16에 단독 배치)
+        // 1. 범례 (모바일 글자 잘림 방지 짧은 라벨 적용)
         var legendLabel = isCltMode 
-          ? 'CLT 표본평균 정규 적합 (Gaussian Bell Curve)' 
-          : '소요일수 적합 곡선 (Log-Normal / Gamma Fit)';
+          ? 'CLT 표본평균 정규 적합 (Gaussian)' 
+          : '소요일수 적합 곡선 (Log-Normal)';
+        var mobileLegendLabel = isCltMode ? '정규 적합(CLT)' : '소요일수 적합';
+
         this._drawLegend(ctx, [
-          { label: '구간별 빈도 (Histogram)', color: isDark ? '#38bdf8' : '#7dd3fc' },
-          { label: legendLabel, color: '#ef4444', isLine: true }
+          { label: '구간별 빈도 (Histogram)', mobileLabel: '구간 빈도', color: isDark ? '#38bdf8' : '#7dd3fc' },
+          { label: legendLabel, mobileLabel: mobileLegendLabel, color: '#ef4444', isLine: true }
         ], w, 16, isDark);
 
         var bins = distData.bins || [];
@@ -1240,22 +1294,24 @@
 
         // 2. 히스토그램 막대 렌더링
         var barW = chartW / bins.length;
+        var tickStep = isMobile ? Math.ceil(bins.length / 4) : 2;
+
         for (var i = 0; i < bins.length; i++) {
           var b = bins[i];
           var barH = (b.count / maxCount) * chartH;
           var x = padding.left + i * barW;
           var y = padding.top + chartH - barH;
 
-          ctx.fillStyle = isDark ? '#38bdf844' : '#bae6fd';
-          ctx.strokeStyle = '#0284c7';
+          ctx.fillStyle = isDark ? 'rgba(56, 189, 248, 0.25)' : '#bae6fd';
+          ctx.strokeStyle = isDark ? '#38bdf8' : '#0284c7';
           ctx.lineWidth = 1;
-          ctx.fillRect(x + 2, y, barW - 4, barH);
-          ctx.strokeRect(x + 2, y, barW - 4, barH);
+          ctx.fillRect(x + 1, y, Math.max(1, barW - 2), barH);
+          ctx.strokeRect(x + 1, y, Math.max(1, barW - 2), barH);
 
-          // X축 구간 눈금 라벨
-          if (i % 2 === 0 || i === bins.length - 1) {
+          // X축 구간 눈금 라벨 (모바일 겹침 방지: 균등 간격 샘플링)
+          if (i % tickStep === 0 || i === bins.length - 1) {
             ctx.fillStyle = textColor;
-            ctx.font = '10px sans-serif';
+            ctx.font = (isMobile ? '9.5px' : '10.5px') + ' sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(Math.round(b.from) + '일', x + barW / 2, h - padding.bottom + 18);
           }
@@ -1278,9 +1334,8 @@
           }
         } else {
           // [실제 관측치 모드]: 대기시간/소요일수 특성에 부합하는 로그정규(Log-Normal) 형태
-          // 0~3일 부근에 최빈값이 위치하고 오른쪽으로 긴 꼬리를 그리는 실제 데이터 일치 곡선
-          var modeX = Math.max(0.5, distData.mean * 0.4); // 양의 왜도 최빈값
-          var s = 0.85; // 분산 모수
+          var modeX = Math.max(0.5, distData.mean * 0.4);
+          var s = 0.85;
           for (var px = 0; px <= chartW; px += 3) {
             var xVal = distData.min + (px / chartW) * (distData.max - distData.min);
             var logH = 0;
@@ -1305,38 +1360,41 @@
         ctx.stroke();
       },
 
-      // 7.3. 가설 검정 비교 막대 차트 (상단 여유 58px & 범례와 p-value 뱃지 간섭 완전 분리)
+      // 7.3. 가설 검정 비교 막대 차트 (유의수준 뱃지 충돌 방지 & 바닥 텍스트 여백 확보)
       renderHypothesisChart: function (canvas, hypList) {
         var setup = this._setupCanvas(canvas);
         if (!setup || !hypList) return;
         var ctx = setup.ctx;
         var w = setup.width;
         var h = setup.height;
+        var isMobile = setup.isMobile;
 
         ctx.clearRect(0, 0, w, h);
         var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         var textColor = isDark ? '#e2e8f0' : '#475569';
         var gridColor = isDark ? 'rgba(51, 65, 85, 0.7)' : '#e2e8f0';
 
-        var padding = { top: 58, right: 30, bottom: 45, left: 60 };
+        var padding = { top: isMobile ? 54 : 58, right: isMobile ? 16 : 30, bottom: 46, left: isMobile ? 44 : 60 };
         var chartW = w - padding.left - padding.right;
         var chartH = h - padding.top - padding.bottom;
 
-        // 1. 범례 (상단 y=16에 단독 배치)
+        // 1. 범례 (모바일 스마트 축약)
         this._drawLegend(ctx, [
-          { label: '기존 단순대조 (Legacy)', color: isDark ? '#475569' : '#94a3b8' },
-          { label: '제안 교차검증 (Proposed)', color: '#0284c7' }
+          { label: '기존 단순대조 (Legacy)', mobileLabel: '기존대조', color: isDark ? '#475569' : '#94a3b8' },
+          { label: '제안 교차검증 (Proposed)', mobileLabel: '제안모형', color: '#0284c7' }
         ], w, 16, isDark);
 
         // 2. 가설 4개 컬럼 렌더링
         var colW = chartW / 4;
+        var barW = isMobile ? Math.max(9, Math.min(13, (colW - 14) / 2)) : Math.max(14, Math.min(20, (colW - 20) / 2));
+
         for (var i = 0; i < 4; i++) {
           var hyp = hypList[i];
           var xCenter = padding.left + i * colW + colW / 2;
 
-          // 가설 ID 라벨
+          // 가설 ID 라벨 (바닥 여유 22px 확보)
           ctx.fillStyle = textColor;
-          ctx.font = 'bold 11px sans-serif';
+          ctx.font = (isMobile ? 'bold 10px' : 'bold 11.5px') + ' sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('가설 ' + hyp.id, xCenter, h - padding.bottom + 22);
 
@@ -1345,52 +1403,78 @@
           var propVal = isRate ? hyp.proposedRate : hyp.proposedMeanDays;
           var maxRange = isRate ? 100 : 200;
 
-          var barW = 18;
           var legH = Math.min(chartH, (legVal / maxRange) * chartH);
           var propH = Math.min(chartH, (propVal / maxRange) * chartH);
 
+          var legY = padding.top + chartH - legH;
+          var propY = padding.top + chartH - propH;
+
           // Legacy Bar (Grey)
           ctx.fillStyle = isDark ? '#475569' : '#94a3b8';
-          ctx.fillRect(xCenter - barW - 3, padding.top + chartH - legH, barW, legH);
+          ctx.fillRect(xCenter - barW - 1.5, legY, barW, legH);
 
           // Proposed Bar (Blue)
           ctx.fillStyle = '#0284c7';
-          ctx.fillRect(xCenter + 3, padding.top + chartH - propH, barW, propH);
+          ctx.fillRect(xCenter + 1.5, propY, barW, propH);
 
-          // 막대 위 수치
-          ctx.fillStyle = isDark ? '#ffffff' : '#1e293b';
-          ctx.font = '10px sans-serif';
-          ctx.fillText(legVal.toFixed(1) + (isRate ? '%' : 'd'), xCenter - barW / 2 - 3, padding.top + chartH - legH - 5);
-          ctx.fillText(propVal.toFixed(1) + (isRate ? '%' : 'd'), xCenter + barW / 2 + 3, padding.top + chartH - propH - 5);
+          // 막대 위 수치 (바닥에 너무 붙지 않도록 최소 14px 여백 보장)
+          ctx.font = (isMobile ? '9px' : '10.5px') + ' sans-serif';
 
-          // 유의수준 뱃지 (상단 범례와 겹치지 않도록 차트 플롯 바로 위 y=padding.top-10 에 안전 배치)
+          // 기존값
+          ctx.fillStyle = isDark ? '#cbd5e1' : '#475569';
+          var legTextY = Math.min(padding.top + chartH - 12, legY - 5);
+          ctx.fillText(legVal.toFixed(1) + (isRate ? '%' : 'd'), xCenter - barW / 2 - 1.5, legTextY);
+
+          // 제안값
+          ctx.fillStyle = isDark ? '#38bdf8' : '#0284c7';
+          var propTextY = Math.min(padding.top + chartH - 12, propY - 5);
+          ctx.fillText(propVal.toFixed(1) + (isRate ? '%' : 'd'), xCenter + barW / 2 + 1.5, propTextY);
+
+          // 유의수준 뱃지: 상단 여백에 깔끔한 필(Pill) 형태로 렌더링하여 가로 충돌 방지
+          var pText = isMobile ? 'p<.001' : '*** p<0.001';
+          ctx.font = (isMobile ? 'bold 9px' : 'bold 10px') + ' sans-serif';
+          var pWidth = ctx.measureText(pText).width;
+          var badgeY = padding.top - 14;
+
+          ctx.fillStyle = isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.12)';
+          ctx.fillRect(xCenter - pWidth / 2 - 4, badgeY - 9, pWidth + 8, 14);
+
           ctx.fillStyle = '#10b981';
-          ctx.font = 'bold 10px sans-serif';
-          ctx.fillText('*** p<0.001', xCenter, padding.top - 12);
+          ctx.textAlign = 'center';
+          ctx.fillText(pText, xCenter, badgeY + 2);
         }
+
+        // 바닥 기준선
+        ctx.strokeStyle = gridColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, padding.top + chartH);
+        ctx.lineTo(w - padding.right, padding.top + chartH);
+        ctx.stroke();
       },
 
-      // 7.4. 카플란-마이어 생존곡선 차트 (긴 범례 텍스트 자동 측정으로 중위138일 겹침 해결)
+      // 7.4. 카플란-마이어 생존곡선 차트 (모바일 축약 및 단계곡선 고해상도)
       renderSurvivalChart: function (canvas, kmData) {
         var setup = this._setupCanvas(canvas);
         if (!setup || !kmData) return;
         var ctx = setup.ctx;
         var w = setup.width;
         var h = setup.height;
+        var isMobile = setup.isMobile;
 
         ctx.clearRect(0, 0, w, h);
         var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         var textColor = isDark ? '#e2e8f0' : '#475569';
         var gridColor = isDark ? 'rgba(51, 65, 85, 0.7)' : '#e2e8f0';
 
-        var padding = { top: 52, right: 30, bottom: 40, left: 55 };
+        var padding = { top: isMobile ? 54 : 52, right: isMobile ? 18 : 30, bottom: 42, left: isMobile ? 48 : 55 };
         var chartW = w - padding.left - padding.right;
         var chartH = h - padding.top - padding.bottom;
 
-        // 1. 범례 (상단 y=16에 동적 너비 측정으로 완벽 배치)
+        // 1. 범례 (모바일 시 짧고 직관적인 라벨)
         this._drawLegend(ctx, [
-          { label: '기존 단순대조 (중위 138일)', color: '#f59e0b', isLine: true },
-          { label: '제안모형 (중위 7일)', color: '#10b981', isLine: true }
+          { label: '기존 단순대조 (중위 138일)', mobileLabel: '기존 (중위 138일)', color: '#f59e0b', isLine: true },
+          { label: '제안모형 (중위 7일)', mobileLabel: '제안 (중위 7일)', color: '#10b981', isLine: true }
         ], w, 16, isDark);
 
         // 2. Y축 그리드
@@ -1405,7 +1489,7 @@
           ctx.stroke();
 
           ctx.fillStyle = textColor;
-          ctx.font = '10px sans-serif';
+          ctx.font = (isMobile ? '9.5px' : '10.5px') + ' sans-serif';
           ctx.textAlign = 'right';
           ctx.fillText((frac * 100).toFixed(0) + '%', padding.left - 6, y + 4);
         }
@@ -1422,7 +1506,6 @@
           var y = padding.top + chartH - pt.s * chartH;
           if (i === 0) ctx.moveTo(x, y);
           else {
-            var prevX = padding.left + (kmData.legacyCurve[i - 1].t / maxDays) * chartW;
             ctx.lineTo(x, padding.top + chartH - kmData.legacyCurve[i - 1].s * chartH);
             ctx.lineTo(x, y);
           }
@@ -1455,30 +1538,34 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // 6. X축 눈금
-        [0, 30, 60, 90, 120, 150, 180, 240].forEach(function (day) {
+        // 6. X축 눈금 (모바일 5개 눈금, 데스크톱 8개 눈금)
+        var ticks = isMobile ? [0, 60, 120, 180, 240] : [0, 30, 60, 90, 120, 150, 180, 240];
+        ticks.forEach(function (day) {
           var x = padding.left + (day / maxDays) * chartW;
           ctx.fillStyle = textColor;
-          ctx.font = '10px sans-serif';
+          ctx.font = (isMobile ? '9.5px' : '10.5px') + ' sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText(day + '일', x, h - padding.bottom + 16);
         });
       },
 
-      // 7.5. 로지스틱 회귀 오즈비 포레스트 플롯 (Forest Plot)
+      // 7.5. 로지스틱 회귀 오즈비 포레스트 플롯 (Forest Plot - 모바일 라벨 잘림 방지)
       renderForestPlot: function (canvas, regData) {
         var setup = this._setupCanvas(canvas);
         if (!setup || !regData) return;
         var ctx = setup.ctx;
         var w = setup.width;
         var h = setup.height;
+        var isMobile = setup.isMobile;
 
         ctx.clearRect(0, 0, w, h);
         var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         var textColor = isDark ? '#e2e8f0' : '#475569';
         var gridColor = isDark ? 'rgba(51, 65, 85, 0.7)' : '#e2e8f0';
 
-        var padding = { top: 35, right: 30, bottom: 35, left: 160 };
+        // 모바일 좌측 패딩 최적화 (글자 짤림 방지)
+        var leftPad = isMobile ? 98 : 160;
+        var padding = { top: 35, right: isMobile ? 18 : 30, bottom: 35, left: leftPad };
         var chartW = w - padding.left - padding.right;
         var chartH = h - padding.top - padding.bottom;
 
@@ -1486,7 +1573,7 @@
         ctx.fillStyle = textColor;
         ctx.font = 'bold 11px sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText('오즈비 (Odds Ratio, Log Scale)', padding.left, 20);
+        ctx.fillText(isMobile ? '오즈비(OR Log Scale)' : '오즈비 (Odds Ratio, Log Scale)', padding.left, 20);
 
         var factors = regData.factors;
         var rowH = chartH / factors.length;
@@ -1510,8 +1597,9 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // 로그 눈금선 (1, 5, 10, 25, 50, 100)
-        [1, 5, 10, 25, 50, 100].forEach(function (val) {
+        // 로그 눈금선
+        var scaleTicks = isMobile ? [1, 10, 50, 100] : [1, 5, 10, 25, 50, 100];
+        scaleTicks.forEach(function (val) {
           var x = logToX(val);
           ctx.strokeStyle = gridColor;
           ctx.lineWidth = 1;
@@ -1521,20 +1609,25 @@
           ctx.stroke();
 
           ctx.fillStyle = textColor;
-          ctx.font = '10px sans-serif';
+          ctx.font = (isMobile ? '9px' : '10px') + ' sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText(val.toString(), x, h - padding.bottom + 16);
         });
+
+        // 모바일 요약 요인명
+        var mobileNames = ['안심상속 증빙', 'HIS 보호자', '개명 교차검증', '선수금 예치'];
 
         // 행별 신뢰구간 및 포인트
         for (var i = 0; i < factors.length; i++) {
           var f = factors[i];
           var yCenter = padding.top + i * rowH + rowH / 2;
 
+          var displayName = (isMobile && mobileNames[i]) ? mobileNames[i] : f.name;
+
           ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
-          ctx.font = 'bold 12px sans-serif';
+          ctx.font = (isMobile ? 'bold 10px' : 'bold 11.5px') + ' sans-serif';
           ctx.textAlign = 'right';
-          ctx.fillText(f.name, padding.left - 12, yCenter + 4);
+          ctx.fillText(displayName, padding.left - 8, yCenter + 4);
 
           var xLo = logToX(f.ci[0]);
           var xHi = logToX(f.ci[1]);
@@ -1557,10 +1650,12 @@
           ctx.fillStyle = '#0284c7';
           ctx.fillRect(xMid - 4, yCenter - 4, 8, 8);
 
+          // OR 수치 표기 (우측 화면 밖으로 넘치지 않도록 보호)
           ctx.fillStyle = isDark ? '#38bdf8' : '#0284c7';
-          ctx.font = 'bold 11px sans-serif';
+          ctx.font = 'bold 10px sans-serif';
           ctx.textAlign = 'left';
-          ctx.fillText('OR ' + f.or.toFixed(1), xHi + 8, yCenter + 4);
+          var orTextX = Math.min(w - 42, xHi + 6);
+          ctx.fillText('OR ' + f.or.toFixed(1), orTextX, yCenter + 4);
         }
       }
     }

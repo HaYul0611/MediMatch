@@ -2267,7 +2267,8 @@ th {
 
 @media (max-width: 768px) {
   .nav-container {
-    padding: 12px 16px;
+    padding: 10px 14px;
+    gap: 8px;
   }
 
   .brand-badge,
@@ -2275,23 +2276,177 @@ th {
     display: none;
   }
 
+  .brand-title {
+    font-size: 15px;
+  }
+
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .nav-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 5px;
+    white-space: nowrap;
+  }
+
   .main-wrapper {
-    padding: 24px 16px 48px;
-    gap: 28px;
+    padding: 18px 12px 48px;
+    gap: 20px;
   }
 
   .hero-banner {
-    padding: 28px 16px;
+    padding: 22px 14px;
   }
 
+  .hero-paper-title {
+    font-size: 19px;
+    line-height: 1.42;
+    margin-bottom: 10px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .hero-purpose-statement {
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.65;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  /* 글로벌 아코디언 툴바 반응형 */
+  .accordion-global-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .accordion-toolbar-left,
+  .accordion-toolbar-right {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .btn-toolbar {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .toolbar-stat-indicator {
+    width: 100%;
+    justify-content: center;
+    font-size: 11.5px;
+    margin-top: 2px;
+    text-align: center;
+  }
+
+  /* 아코디언 헤더 모바일 레이아웃: 글자 겹침 및 5줄 쪼개짐 원천 차단 */
+  .accordion-header {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    position: relative;
+  }
+
+  .accordion-header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+    padding-right: 32px; /* 우측 토글 화살표 공간 확보 */
+  }
+
+  .accordion-header-left .part-badge {
+    align-self: flex-start;
+  }
+
+  .accordion-title-wrap {
+    width: 100%;
+    gap: 4px;
+  }
+
+  .accordion-title {
+    font-size: 14.5px;
+    line-height: 1.45;
+    flex-wrap: wrap;
+    gap: 6px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .accordion-subtitle {
+    font-size: 11.5px;
+    line-height: 1.45;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .accordion-header-right {
+    justify-content: flex-start;
+    width: 100%;
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .accordion-chevron {
+    position: absolute;
+    top: 16px;
+    right: 14px;
+  }
+
+  /* 파이프라인 다이어그램 모바일 */
   .pipeline-diagram {
     grid-template-columns: 1fr;
     gap: 10px;
   }
 
+  .stage-card {
+    padding: 14px 16px;
+  }
+
+  .stage-title {
+    font-size: 14px;
+    word-break: keep-all;
+  }
+
+  .stage-desc {
+    font-size: 12px;
+    line-height: 1.5;
+    word-break: keep-all;
+  }
+
+  /* 지표 카드 그리드 모바일 */
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .metric-card {
+    padding: 14px 12px;
+  }
+
+  .metric-val {
+    font-size: 22px;
+  }
+
+  .metric-sub {
+    font-size: 11px;
+    word-break: keep-all;
+  }
+
+  /* 폼 & 컨트롤 모바일 */
   .sim-form-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
 
   .table-card {
@@ -2300,7 +2455,7 @@ th {
 
   .table-responsive {
     max-height: 440px;
-    min-height: 300px;
+    min-height: 280px;
   }
 
   .control-bar {
@@ -2335,6 +2490,100 @@ th {
     overflow-x: auto;
   }
 
+  /* 차트 및 통계 테이블 모바일 최적화 */
+  .stats-chart-card {
+    padding: 14px 12px;
+    margin-bottom: 14px;
+  }
+
+  .chart-card-header h4 {
+    font-size: 14px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .chart-card-header p {
+    font-size: 11.5px;
+    line-height: 1.45;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .chart-canvas-wrap {
+    padding: 8px 6px;
+  }
+
+  .chart-canvas {
+    height: 220px;
+  }
+
+  .chart-analysis-note {
+    font-size: 11.5px;
+    line-height: 1.6;
+    padding: 10px 12px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .stats-table-wrap {
+    margin-bottom: 12px;
+    border-radius: var(--radius-sm);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .stats-table-wrap::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .stats-table-wrap::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+  }
+
+  .stats-table th,
+  .stats-table td {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  /* 가설 카드 모바일 그리드 */
+  .hyp-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .hyp-card {
+    padding: 14px 12px;
+  }
+
+  .hyp-title {
+    font-size: 13.5px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .hyp-statement {
+    font-size: 11px;
+    line-height: 1.5;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .hyp-conclusion {
+    font-size: 11.5px;
+    line-height: 1.55;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .sim-info-box {
+    font-size: 12px;
+    line-height: 1.65;
+    padding: 12px 14px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
   .report-header-box {
     grid-template-columns: 1fr;
   }
@@ -2342,7 +2591,7 @@ th {
 
 @media (max-width: 440px) {
   .nav-actions .nav-btn span {
-    display: none;
+    font-size: 10.5px;
   }
 
   .metrics-grid {
@@ -2353,6 +2602,10 @@ th {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+  }
+
+  .chart-canvas {
+    height: 200px;
   }
 }
 

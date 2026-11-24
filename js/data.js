@@ -1,12 +1,17 @@
 /**
  * MediMatch - 연구 논문 기반 가명 합성 데이터셋 및 심평원 공식 공시 통계
  * 논문: 의료기관 진료비 미식별 입금 및 사망환자 미수령 환불금의 공공관리체계 구축 방안 (오하율, 2026)
+ * 상태: HIRA Research 원고 투고 완료(2026-11-24), 편집부 검토 단계. 게재 확정 전.
  * 
  * [통계 정의 및 출처 고지]
  * 1. 아래 hiraStats는 건강보험심사평가원(HIRA)의 공식 공시 통계인 『진료비 확인(과다본인부담금 환불 결정) 현황』입니다.
  * 2. 주의: 심평원 공시는 국민의 비급여 확인신청에 따른 환불 '결정' 실적이며,
  *    병원 내부에서 발생하는 미식별 입금 및 사망환자 미수령 환불금의 장기 잔류 규모는 전국 단위 공식 통계가 부재합니다.
  * 3. 앱 내 150건 및 5,000건 데이터는 실제 EMR 원장이 아닌 100% 가명 합성 연구 모의 데이터(Synthetic Mock Data)입니다.
+ * 4. 표본 구분:
+ *    - researchSample150 (N=150): 학술 논문 실증 전수 데이터셋 (미식별 입금 100건 + 미수령 환불금 50건)
+ *    - demoExtraCases (N=5): 애플리케이션 선수금 수납대체 기능 시연용 추가 프리셋 5건
+ *    - samples (N=155): 시연 앱 전체 통합 데이터셋 (하위 호환성 유지)
  */
 
 window.MEDIMATCH_DATA = {
@@ -2388,3 +2393,12 @@ window.MEDIMATCH_DATA = {
     }
   ]
 };
+
+// 학술 논문 실증 정합성 보장을 위한 150건 연구 표본 및 추가 시연 예제 5건 명시적 분리
+window.MEDIMATCH_DATA.researchSample150 = window.MEDIMATCH_DATA.samples.filter(function (s) {
+  return s.caseType === 'DEPOSIT' || s.caseType === 'REFUND';
+});
+
+window.MEDIMATCH_DATA.demoExtraCases = window.MEDIMATCH_DATA.samples.filter(function (s) {
+  return s.caseType === 'PREPAYMENT';
+});

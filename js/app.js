@@ -2172,7 +2172,8 @@
       bootMean.textContent = advResult.bootstrap.meanSavedDays.toFixed(1) + '일 절감';
     }
     if (bootCi && advResult.bootstrap) {
-      bootCi.textContent = '95% 백분위수 신뢰구간: [' + advResult.bootstrap.ci95[0].toFixed(1) + '일, ' + advResult.bootstrap.ci95[1].toFixed(1) + '일] (B=' + advResult.bootstrap.iterations + '회)';
+      var srcText = advResult.bootstrap.sourceLabel ? ' (' + advResult.bootstrap.sourceLabel + ')' : ' (B=' + advResult.bootstrap.iterations + '회)';
+      bootCi.textContent = '95% 백분위수 신뢰구간: [' + advResult.bootstrap.ci95[0].toFixed(1) + '일, ' + advResult.bootstrap.ci95[1].toFixed(1) + '일]' + srcText;
     }
 
     // Hospital ROI (논문 Ⅳ.6.6절 시나리오 시뮬레이션 일치)
@@ -2262,9 +2263,11 @@
     if (!StatsEngine.hospitalPopulation) {
       StatsEngine.generateHospitalDataset(5000);
     }
-    // Perform initial random sampling (n=500)
-    var sample = StatsEngine.sampleRandom(null, 500);
-    runAndRenderAllStats(sample);
+    // HIRA Research 논문 실증 원자료 150건으로 초기화 (단일 진실 공급원 SSOT 기준)
+    var initialSample = (window.MEDIMATCH_DATA && window.MEDIMATCH_DATA.researchSample150) ?
+      window.MEDIMATCH_DATA.researchSample150 :
+      ((window.MEDIMATCH_DATA && window.MEDIMATCH_DATA.samples) ? window.MEDIMATCH_DATA.samples.filter(function (s) { return s.caseType === 'DEPOSIT' || s.caseType === 'REFUND'; }) : StatsEngine.sampleRandom(null, 150));
+    runAndRenderAllStats(initialSample);
 
     // Accordion click handlers
     document.querySelectorAll('.accordion-header').forEach(function (header) {

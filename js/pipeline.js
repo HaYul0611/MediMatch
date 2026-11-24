@@ -1,12 +1,17 @@
 /**
- * MediMatch - 5단계 다차원 교차검증 및 공공연계 판정 엔진
+ * MediMatch - 5단계 다차원 교차검증 및 공공연계 판정 엔진 (연구 시연용 개념증명 PoC)
  * 
  * 연구 논문: 의료기관 진료비 미식별 입금 및 사망환자 미수령 환불금의 공공관리체계 구축 방안 (오하율, 2026)
+ * 
+ * [안내] 본 앱은 연구 제안 5단계 공공관리모형의 시연용 개념증명(PoC) 소프트웨어입니다.
+ * 실제 정부24·행정안전부·법원 전산망에 실시간 직접 연결되지 않으며,
+ * 연구 목적으로 생성된 100% 가명 합성 데이터와 사전 정의된 모의 증빙 시나리오를 통해 동작을 시뮬레이션합니다.
+ * 
  * 모형 아키텍처:
  *   [1단계] 1차 단순 성명 대조 (Legacy)
  *   [2단계] HIS 다차원 교차검증 (환자번호, 생년월일, 진료기간, 과거 수납이력)
- *   [3단계] 예외 분류 및 상태값 추적
- *   [4단계] 공공행정정보 연계 (정부24 안심상속 등 상속권자 적격 확인)
+ *   [3단계] 예외 분류 및 정밀 진단
+ *   [4단계] 공공행정정보 연계 시뮬레이션 (정부24 안심상속 등 상속권자 모의 증빙 대조)
  *   [5단계] 적법 후속처리 및 종결 (오지급 원천 차단)
  */
 
@@ -127,7 +132,7 @@
         detail: step3Detail
       });
 
-      // [4단계] 공공행정정보 연계 (정부24 안심상속 등)
+      // [4단계] 공공행정정보 연계 시뮬레이션 (정부24 안심상속 등 모의 증빙 대조)
       var step4Status = 'SKIPPED';
       var step4Detail = '';
       var heirQualified = false;
@@ -135,11 +140,11 @@
       if (sanitized.caseType === 'REFUND' && sanitized.isDeceased) {
         if (sanitized.hasHeirPublicProof) {
           step4Status = 'VERIFIED';
-          step4Detail = '정부24 안심상속 원스톱 서비스 적격 상속인 증빙(상속관계 및 대리권) 공공 확인 완료.';
+          step4Detail = '정부24 안심상속 원스톱 서비스 모의 적격 상속인 증빙(상속관계 및 대리권) 대조 확인 완료 (PoC 모의 검증).';
           heirQualified = true;
         } else {
           step4Status = 'HOLD';
-          step4Detail = '공공 상속 증빙 부존재 또는 상속 분쟁 상태. 오지급 방지를 위해 임의 지급 보류.';
+          step4Detail = '공공 상속 모의 증빙 부존재 또는 상속 분쟁 상태. 오지급 방지를 위해 임의 지급 보류 (PoC).';
           heirQualified = false;
         }
       } else if (sanitized.caseType === 'REFUND' && sanitized.isUninsured) {
@@ -150,7 +155,7 @@
         step4Detail = '선수금(사전 예치) 수납 건으로 공공 상속연계 단계를 건너뜁니다.';
       } else if (!multiDimSuccess) {
         step4Status = 'PUBLIC_INQUIRY_STANDBY';
-        step4Detail = '미식별 장기 잔류 건으로 기관 행정연계 대기열에 등록되었습니다.';
+        step4Detail = '미식별 장기 잔류 건으로 기관 행정연계 대기열에 등록되었습니다 (모의 큐).';
       } else {
         step4Status = 'NOT_APPLICABLE';
         step4Detail = '사망환자 환불 건이 아니므로 공공 상속연계 단계를 건너뜁니다.';
@@ -158,7 +163,7 @@
 
       steps.push({
         step: 4,
-        title: '4차 공공행정정보 연계',
+        title: '4차 공공행정정보 연계 (모의)',
         status: step4Status,
         detail: step4Detail
       });
@@ -394,7 +399,9 @@
     },
 
     /**
-     * Web Crypto API 기반 표준 SHA-256 해시 계산 (비동기)
+     * Web Crypto API 기반 감사 무결성 검증용 SHA-256 해시 계산 (비동기)
+     * ※ 주의: 감사 로그 위·변조 방지용 내부 무결성 검증 해시(Digest)이며,
+     *    공인전자서명이나 공식 전자직인이 아닙니다.
      */
     generateCryptoHash: function (seed, callback) {
       var text = (typeof seed === 'object' ? JSON.stringify(seed) : String(seed)) + '_MEDIMATCH_SALT_2026';

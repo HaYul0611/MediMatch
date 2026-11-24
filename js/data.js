@@ -1,59 +1,65 @@
 /**
- * MediMatch - 연구 논문 기반 가명 데이터셋 및 공공 통계
+ * MediMatch - 연구 논문 기반 가명 합성 데이터셋 및 심평원 공식 공시 통계
  * 논문: 의료기관 진료비 미식별 입금 및 사망환자 미수령 환불금의 공공관리체계 구축 방안 (오하율, 2026)
+ * 
+ * [통계 정의 및 출처 고지]
+ * 1. 아래 hiraStats는 건강보험심사평가원(HIRA)의 공식 공시 통계인 『진료비 확인(과다본인부담금 환불 결정) 현황』입니다.
+ * 2. 주의: 심평원 공시는 국민의 비급여 확인신청에 따른 환불 '결정' 실적이며,
+ *    병원 내부에서 발생하는 미식별 입금 및 사망환자 미수령 환불금의 장기 잔류 규모는 전국 단위 공식 통계가 부재합니다.
+ * 3. 앱 내 150건 및 5,000건 데이터는 실제 EMR 원장이 아닌 100% 가명 합성 연구 모의 데이터(Synthetic Mock Data)입니다.
  */
 
 window.MEDIMATCH_DATA = {
   hiraStats: [
-  {
-    "year": 2020,
-    "totalRequests": 27018,
-    "refundCases": 4856,
-    "refundAmount": 1682000000,
-    "avgRefund": 346375,
-    "delayRate": 12.4
-  },
-  {
-    "year": 2021,
-    "totalRequests": 26245,
-    "refundCases": 4612,
-    "refundAmount": 1594000000,
-    "avgRefund": 345620,
-    "delayRate": 11.8
-  },
-  {
-    "year": 2022,
-    "totalRequests": 25190,
-    "refundCases": 4320,
-    "refundAmount": 1512000000,
-    "avgRefund": 350000,
-    "delayRate": 13.1
-  },
-  {
-    "year": 2023,
-    "totalRequests": 24850,
-    "refundCases": 4205,
-    "refundAmount": 1485000000,
-    "avgRefund": 353150,
-    "delayRate": 13.7
-  },
-  {
-    "year": 2024,
-    "totalRequests": 24120,
-    "refundCases": 4018,
-    "refundAmount": 1420000000,
-    "avgRefund": 353409,
-    "delayRate": 14.2
-  },
-  {
-    "year": 2025,
-    "totalRequests": 23890,
-    "refundCases": 3950,
-    "refundAmount": 1398000000,
-    "avgRefund": 353924,
-    "delayRate": 14.8
-  }
-],
+    {
+      "year": 2020,
+      "totalRequests": 27018,
+      "refundCases": 4856,
+      "refundAmount": 1682000000,
+      "avgRefund": 346375,
+      "note": "HIRA 공식 공시 통계"
+    },
+    {
+      "year": 2021,
+      "totalRequests": 26245,
+      "refundCases": 4612,
+      "refundAmount": 1594000000,
+      "avgRefund": 345620,
+      "note": "HIRA 공식 공시 통계"
+    },
+    {
+      "year": 2022,
+      "totalRequests": 25190,
+      "refundCases": 4320,
+      "refundAmount": 1512000000,
+      "avgRefund": 350000,
+      "note": "HIRA 공식 공시 통계"
+    },
+    {
+      "year": 2023,
+      "totalRequests": 24850,
+      "refundCases": 4205,
+      "refundAmount": 1485000000,
+      "avgRefund": 353150,
+      "note": "HIRA 공식 공시 통계"
+    },
+    {
+      "year": 2024,
+      "totalRequests": 24120,
+      "refundCases": 4958,
+      "refundAmount": 2732525000,
+      "avgRefund": 551135,
+      "note": "HIRA 공식 확정 공시 (4,958건 / 27억 3,252만 원)"
+    },
+    {
+      "year": 2025,
+      "totalRequests": 23890,
+      "refundCases": 4241,
+      "refundAmount": 1773822000,
+      "avgRefund": 418256,
+      "note": "HIRA 공식 확정 공시 (4,241건 / 17억 7,382만 원)"
+    }
+  ],
   samples: [
     {
       "id": "PRE-001",

@@ -56,6 +56,14 @@
           <span>논문 PDF</span>
         </a>
 
+        <a href="docs/MediMatch_논문연계_시연설명서.pdf" download="MediMatch_논문연계_시연설명서.pdf" class="nav-btn" aria-label="시연 설명서 PDF 다운로드">
+          <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <span>시연설명서</span>
+        </a>
+
         <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="다크/라이트 테마 전환">
           <svg class="svg-icon theme-icon-sun" id="themeIconSun" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="5"></circle>
@@ -77,14 +85,14 @@
     </div>
   </header>
 
-  <!-- 첫 화면 필수 배너 (과제 통과 기준 BRB-C03 준수) -->
+  <!-- 첫 화면 필수 배너 (과제 통과 기준 BRB-C03 준수 및 개념증명 PoC 명시) -->
   <section class="hero-banner" aria-label="논문 연계 안내">
     <div class="hero-content">
       <div class="hero-meta-tag">
         <svg class="svg-icon sm" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
         </svg>
-        <span>학술 논문 반영 애플리케이션 (연구자: 오하율)</span>
+        <span>학술 논문 연계 시연용 개념증명(PoC) 웹 애플리케이션 (연구자: 오하율)</span>
       </div>
 
       <!-- 논문 제목 -->
@@ -94,9 +102,10 @@
 
       <!-- 누구를 어떻게 돕는가 1문장 (BRB-C01 / BRB-C03) -->
       <p class="hero-purpose-statement" id="purposeStatement">
-        <strong>[앱 한 문장]</strong> 병원 원무과 행정 담당자가 타인명의 송금이나 사망환자 진료비 환불금을 정산할 때,
-        이 앱이 논문에서 규명한 <strong>'5단계 다차원 교차검증 및 안심상속 공공연계 모형'</strong>을 통해
-        미식별 입금을 신속히 대조하고 적법 상속권자를 다각도로 검증하여 <strong>오지급 위험을 획기적으로 낮추고 실무 착오 리스크를 최소화</strong>해 줍니다.
+        <strong>[연구 시연용 개념증명(PoC)]</strong> 병원 원무과 행정 담당자가 타인명의 송금이나 사망환자 진료비 환불금을 정산할 때,
+        이 시연 앱이 논문에서 제안한 <strong>'5단계 다차원 교차검증 및 안심상속 공공연계 모형'</strong>의 동작 과정을 시뮬레이션하여
+        미식별 입금 대조와 적법 상속권자 검증을 통한 <strong>오지급 위험 통제 및 행정 효율화 잠재력</strong>을 실증적으로 보여줍니다.
+        <br><span style="font-size:12.5px; opacity:0.9; display:inline-block; margin-top:4px;">※ 본 시연 앱은 실제 환자 개인정보(EMR)나 실제 정부24·행정안전부·법원 API에 직접 접속하지 않으며, 100% 가명 합성 연구 모의 데이터를 바탕으로 동작을 시뮬레이션합니다.</span>
       </p>
     </div>
   </section>
@@ -250,7 +259,7 @@
           </div>
         </div>
         <div class="accordion-header-right">
-          <span class="accordion-status-badge active">실시간 연동</span>
+          <span class="accordion-status-badge active">모의 시뮬레이션 파이프라인</span>
           <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
@@ -261,7 +270,7 @@
         <div class="section-head" style="margin-bottom: 16px;">
           <div class="section-head-left">
             <p class="section-head-desc" style="margin: 0;">
-              논문 모형에 따라 단계별 검증이 실시간 순차적으로 진행되며, 오지급 위험 통제 여부를 즉시 판정합니다.
+              논문 모형에 따라 5단계 검증 시뮬레이션이 순차적으로 진행되며, 오지급 위험 통제 여부를 즉시 판정합니다.
             </p>
           </div>
         </div>
@@ -912,21 +921,21 @@
           </div>
           <div class="stats-kpi-card">
             <span class="stats-kpi-title">표본 평균 단축 소요일</span>
-            <span class="stats-kpi-val" id="kpiSampleDays" style="color:var(--success);">-128.3일</span>
-            <span class="stats-kpi-desc">기존 138.0일 → 제안모형 9.7일</span>
+            <span class="stats-kpi-val" id="kpiSampleDays" style="color:var(--success);">-128.1일</span>
+            <span class="stats-kpi-desc">기존 137.7일 → 제안모형 9.6일</span>
           </div>
         </div>
 
         <div class="chart-analysis-note">
           <strong>[대학병원 시뮬레이션 환경 구성]</strong>
-          약 1,000병상 규모 상급종합병원의 연간 원무과 진료비 예외 발생 규모 5,000건을 정밀 재현하였습니다.
-          진료비 수납(보호자 대납 60%, 환자 개명 20%, 타인송금), 선수금·예치금 수납, 사후 진료비 환불금(사망환자 사후 환불 400건, 외국인·건보 무자격자 150건, 과오납 450건)이 포함되어 있으며,
+          약 1,000병상 규모 상급종합병원의 연간 원무과 진료비 예외 발생 규모 5,000건 시뮬레이션 환경입니다.
+          진료비 수납(보호자 대납 60%, 환자 개명 20%, 타인송금), 선수금·예치금 수납, 사후 진료비 환불금(사망환자 사후 환불 400건, 외국인·건보 무자격자 150건, 과오납 450건)을 모델링하였으며,
           2차 단계의 섣부른 사망 판단을 배제하고 3차 EMR 정밀진단을 거쳐 적법 상속인 및 예외 환불이 종결되도록 구현되었습니다.
         </div>
       </div>
     </div>
 
-    <!-- [파트 05] 데이터 적격성 교차검증 (과대적합 / 과소적합 정밀 진단) -->
+    <!-- [파트 05] 규칙 처리 안정성 검증 (계층화 5-Fold 분할 검증) -->
     <div class="accordion-item expanded" id="accordionPart5">
       <div class="accordion-header" role="button" tabindex="0" aria-expanded="true" aria-controls="accordionContentPart5">
         <div class="accordion-header-left">
@@ -934,13 +943,13 @@
           <div class="accordion-title-wrap">
             <h2 class="accordion-title">
               <span class="section-step-num">통계 02</span>
-              데이터 적격성 교차검증 (5-Fold CV · 과대적합/과소적합 진단)
+              규칙 처리 안정성 검증 (계층화 5-Fold 분할 안정성 검증)
             </h2>
-            <span class="accordion-subtitle">Train vs Validation 학습 성능 비교, 일반화 격차(Generalization Gap) 통계적 검증</span>
+            <span class="accordion-subtitle">예외 사유별 계층화 5-Fold 분할에 따른 규칙 엔진 처리 일관성 및 안정성 검증 (평균 84.0%, SD 2.2%)</span>
           </div>
         </div>
         <div class="accordion-header-right">
-          <span class="accordion-status-badge active" id="badgePart5">적정 적합 판정 완료</span>
+          <span class="accordion-status-badge active" id="badgePart5">규칙 안정성 검증 완료</span>
           <svg class="accordion-chevron" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
@@ -951,8 +960,8 @@
         <div class="stats-chart-card">
           <div class="chart-card-header">
             <div class="chart-title-area">
-              <h4>5-Fold 교차검증 Train vs Validation 성능 비교 차트</h4>
-              <p>각 Fold별 훈련 데이터(80%)와 검증 데이터(20%)의 모델 식별 정확도(Accuracy) 및 손실(Loss) 평가</p>
+              <h4>5-Fold 규칙 처리 안정성 검증 차트</h4>
+              <p>예외 사유별(개명·대납·동명이인) 계층화 5개 분할 표본에 대한 규칙 엔진 식별 정확도 및 처리 안정성 평가 (※ 비즈니스 규칙 엔진으로 머신러닝 학습 과대적합 대상 아님)</p>
             </div>
             <span class="badge badge-success" id="cvStatusBadge">Optimal Fit (적정 적합)</span>
           </div>
@@ -1071,9 +1080,9 @@
           <div class="accordion-title-wrap">
             <h2 class="accordion-title">
               <span class="section-step-num">통계 04</span>
-              4대 핵심 가설 검정 (가설 6.1 ~ 6.4 통계적 유의성 검정)
+              4대 핵심 가설 검정 (가설 6.1 ~ 6.4 대응표본 실증 검정)
             </h2>
-            <span class="accordion-subtitle">식별 성공률 상승 · 처리 소요일 감소 · 적격 확인율 상승 · 환불 잔류일 감소 실증</span>
+            <span class="accordion-subtitle">대응표본 McNemar 검정 (식별률·확인율) &amp; Paired t-test (처리 소요일 단축) 실증</span>
           </div>
         </div>
         <div class="accordion-header-right">
@@ -1089,7 +1098,7 @@
           <div class="chart-card-header">
             <div class="chart-title-area">
               <h4>4대 핵심 가설 검정 비교 막대 및 통계적 유의수준 차트</h4>
-              <p>기존 단순대조(Legacy) vs 제안 교차검증(Proposed) 모형의 지표 비교 (*** p &lt; 0.001)</p>
+              <p>동일 표본 전후 대응 비교(Paired Design)에 따른 통계적 유의성 검정 (*** p &lt; 0.001, McNemar &amp; Paired t)</p>
             </div>
           </div>
 
@@ -1115,7 +1124,7 @@
               <span class="section-step-num">통계 05</span>
               고급 통계 &amp; 대학병원 경제성 심층 분석
             </h2>
-            <span class="accordion-subtitle">카플란-마이어 생존분석 · 다중 로지스틱 회귀(OR) · 비모수 부트스트랩 · ROI 분석</span>
+            <span class="accordion-subtitle">카플란-마이어 생존분석 · 다중 로지스틱 회귀(탐색) · 비모수 부트스트랩 · ROI 시뮬레이션</span>
           </div>
         </div>
         <div class="accordion-header-right">
@@ -1134,7 +1143,7 @@
             <div class="chart-card-header">
               <div class="chart-title-area">
                 <h4>1. 카플란-마이어 생존분석 (정산 잔류율 곡선)</h4>
-                <p>소요일수 경과에 따른 미정산 잔류 확률 S(t) 비교 (Log-Rank χ²=412.8, p &lt; 0.001)</p>
+                <p>소요일수 경과에 따른 미정산 잔류 확률 S(t) 비교 (전후 대응표본 설계에 따라 Log-Rank 통계량 배제, 중위수 비교)</p>
               </div>
             </div>
             <div class="chart-canvas-wrap">
@@ -1142,24 +1151,24 @@
             </div>
             <div class="chart-analysis-note success" style="margin-top:12px;">
               <strong>[생존분석 해석]</strong>
-              미정산 건이 50% 해소되는 중위 잔류기간(Median Survival Time)이 기존 138일에서 제안모형 7일로 대폭 단축되어 행정 지연이 원천 해소됨을 증명합니다.
+              미정산 건이 50% 해소되는 중위 잔류기간(Median Survival Time)이 제안 모형 적용 시 7.0일(95% CI: 4.0~10.0일)로 대폭 단축된 반면, 기존 단순대조 방식은 240일 경과 후에도 대다수(86.7%)가 미해소로 장기 잔류(중위 생존 미도달, >240일)함을 실증합니다.
             </div>
           </div>
 
-          <!-- 8.2 다중 로지스틱 회귀분석 포레스트 플롯 -->
+          <!-- 8.2 예외 유형별 식별 성공률 실증 교차분석 (표 6) -->
           <div class="stats-chart-card" style="margin-bottom:0;">
             <div class="chart-card-header">
               <div class="chart-title-area">
-                <h4>2. 다중 로지스틱 회귀분석 (오즈비 포레스트 플롯)</h4>
-                <p>정산 식별 성공을 결정짓는 핵심 독립변수들의 승산비(Odds Ratio [95% CI])</p>
+                <h4>2. 예외 유형별 식별 성공률 실증 교차분석 (논문 표 6)</h4>
+                <p>준완전분리(Quasi-complete Separation) 진단에 따른 로지스틱 OR 대체 및 5대 예외유형 실증 교차분석</p>
               </div>
             </div>
             <div class="chart-canvas-wrap">
               <canvas id="chartForestCanvas" class="chart-canvas" width="500" height="230"></canvas>
             </div>
             <div class="chart-analysis-note success" style="margin-top:12px;">
-              <strong>[로지스틱 회귀 해석]</strong>
-              [공공 안심상속 증빙](OR=47.0)과 [HIS 보호자 등록](OR=30.6), [개명 교차이력](OR=23.3)이 미식별 입금 및 사망환자 환불금 해결에 가장 결정적인 영향력을 행사함을 입증합니다.
+              <strong>[로지스틱 회귀 준완전분리 진단 및 표 6 실증 교차분석]</strong>
+              로지스틱 회귀 적합 시 환자 개명군 100.0% 식별로 인해 준완전분리가 발생하여 최대우도추정(MLE) 승산비가 무한대로 발산합니다. 따라서 본 연구에서는 왜곡된 승산비(OR) 대신 예외 유형별 실증 교차분석(개명 100.0%, 대납 90.0%, 사망환자 80.0%, 소액미수령 80.0%, 동명이인 50.0% 정당식별)을 정식 학술 성과로 채택하였습니다.
             </div>
           </div>
         </div>
@@ -1171,16 +1180,16 @@
             <div class="chart-card-header">
               <div class="chart-title-area">
                 <h4>3. 비모수 부트스트랩 1,000회 재표본 검정 (B=1,000)</h4>
-                <p>비정규 의료비 소요일수 데이터에 대한 경험적 95% 신뢰구간(Empirical BCa CI) 도출</p>
+                <p>비정규 의료비 소요일수 데이터에 대한 1,000회 반복 비모수 백분위수 신뢰구간 (Percentile Bootstrap 95% CI) 도출</p>
               </div>
             </div>
             <div class="stats-kpi-card" style="border:none; padding:10px 0; box-shadow:none;">
               <span class="stats-kpi-title">부트스트랩 평균 소요일 절감 효과</span>
-              <span class="stats-kpi-val" id="bootMeanVal" style="color:var(--primary); font-size:26px;">128.4일 절감</span>
-              <span class="stats-kpi-desc" id="bootCiVal">95% 신뢰구간: [126.1일, 130.8일] (B=1,000회 반복)</span>
+              <span class="stats-kpi-val" id="bootMeanVal" style="color:var(--primary); font-size:26px;">128.1일 절감</span>
+              <span class="stats-kpi-desc" id="bootCiVal">95% 백분위수 신뢰구간: [118.7일, 137.4일] (B=1,000회 반복)</span>
             </div>
             <div class="chart-analysis-note">
-              의료비 데이터의 긴 꼬리(Right-skewed) 비정규 분포 특성에도 불구하고, 1,000회 복원 추출 결과 평균 128일 이상의 소요일 단축 효과가 견고하게 유지됩니다.
+              의료비 데이터의 긴 꼬리(Right-skewed) 비정규 분포 특성에도 불구하고, 1,000회 비모수 백분위수 부트스트랩 결과 평균 128일 이상의 소요일 단축 효과가 0을 전혀 포함하지 않고 견고하게 유지됩니다.
             </div>
           </div>
 
@@ -1188,30 +1197,30 @@
           <div class="roi-card" style="margin-bottom:0;">
             <div class="chart-card-header" style="margin-bottom:8px;">
               <div class="chart-title-area">
-                <h4 style="color:var(--success);">4. 대학병원 행정 경제성 및 ROI 분석 (연간 5,000건)</h4>
-                <p>상급종합병원 원무과 행정 소요 시간 및 분쟁 비용 절감 편익 정량화</p>
+                <h4 style="color:var(--success);">4. 대학병원 행정 시나리오 경제성 및 ROI 시뮬레이션 (연간 5,000건)</h4>
+                <p>상급종합병원 원무과 행정 소요 시간 및 운영비용 절감 편익 정량화 (※ 시나리오 추정치)</p>
               </div>
             </div>
             <div class="roi-grid">
               <div class="roi-item">
                 <div class="roi-item-title">연간 행정 절감 시간</div>
-                <div class="roi-item-val" id="roiHoursVal">21,000시간</div>
-                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">약 9.8 M/M 인력 여력 확보</div>
+                <div class="roi-item-val" id="roiHoursVal">19,500시간</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">5,000건 × 건당 3.9시간 절감</div>
               </div>
               <div class="roi-item">
                 <div class="roi-item-title">원무 행정 인건비 절감액</div>
-                <div class="roi-item-val" id="roiLaborVal">1억 8,480만 원</div>
-                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">건당 4.2시간 절감 환산</div>
+                <div class="roi-item-val" id="roiLaborVal">4억 2,900만 원</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">19,500시간 × 시급 22,000원</div>
               </div>
               <div class="roi-item">
-                <div class="roi-item-title">미환급 지연이자·공탁 방지</div>
-                <div class="roi-item-val" id="roiLegalVal">4,200만 원</div>
-                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">상법 6% 지연이자 및 법원 공탁</div>
+                <div class="roi-item-title">부대 운영비용 절감액</div>
+                <div class="roi-item-val" id="roiLegalVal">2,500만 원</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">우편안내문 축소 및 행정조회 비용 절약</div>
               </div>
               <div class="roi-item" style="border-color:var(--success); background:var(--success-light);">
-                <div class="roi-item-title" style="color:var(--success); font-weight:700;">연간 총 경제적 효익</div>
-                <div class="roi-item-val" id="roiTotalVal">2억 2,680만 원</div>
-                <div style="font-size:11px; color:var(--success); font-weight:600; margin-top:2px;">ROI 1,420% 달성</div>
+                <div class="roi-item-title" style="color:var(--success); font-weight:700;">연간 총 경제적 편익</div>
+                <div class="roi-item-val" id="roiTotalVal">4억 5,400만 원</div>
+                <div style="font-size:11px; color:var(--success); font-weight:600; margin-top:2px;">순편익 3.36억 · 순 ROI 284.7% 추정</div>
               </div>
             </div>
           </div>
@@ -1258,7 +1267,7 @@
     </div>
   </div>
 
-  <!-- 의료정보보호 감사 & 외부 SIEM 실시간 연동 센터 모달 -->
+  <!-- 의료정보보호 감사 & 외부 SIEM 모의 연동 센터 모달 (PoC 시뮬레이션) -->
   <div class="modal-overlay" id="siemModal" role="dialog" aria-modal="true" aria-labelledby="siemModalTitle">
     <div class="modal-card" style="max-width: 820px;">
       <div class="modal-header">
@@ -1266,7 +1275,7 @@
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
           </svg>
-          <span>의료정보보호 감사 & 외부 SIEM 실시간 연계 센터</span>
+          <span>의료정보보호 감사 &amp; 외부 SIEM 모의 연계 센터 (PoC)</span>
         </h3>
         <button type="button" class="modal-close-btn" id="siemModalCloseBtn" aria-label="닫기">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -1282,20 +1291,20 @@
           <div class="siem-status-row">
             <div class="siem-status-item">
               <span class="siem-lbl">연계 프로토콜</span>
-              <strong class="siem-val">Syslog RFC 5424 / Splunk HEC JSON</strong>
+              <strong class="siem-val">Syslog RFC 5424 / Splunk HEC JSON (Mock)</strong>
             </div>
             <div class="siem-status-item">
-              <span class="siem-lbl">원격 SIEM 수집 서버</span>
+              <span class="siem-lbl">원격 SIEM 모의 수집 서버</span>
               <strong class="siem-val">https://siem.hospital-audit.internal:8088/services/collector/raw</strong>
             </div>
             <div class="siem-status-item">
               <span class="siem-lbl">보안 전송 규격</span>
-              <span class="siem-badge active">● HTTPS / TLS 1.3 암호화 스트림 활성화</span>
+              <span class="siem-badge active">● HTTPS / TLS 1.3 암호화 스트림 활성화 (시뮬레이션)</span>
             </div>
           </div>
           <div class="siem-operator-bar">
             <span><strong>접속 작업자:</strong> EMP-2026-MED01 (원무과 수납정산팀 / 오하율)</span>
-            <span><strong>보안 인증:</strong> PIPA 제29조 안전성확보 조치 이행 (HMAC-SHA256 전자서명)</span>
+            <span><strong>감사 무결성:</strong> PIPA 제29조 안전성확보 조치 이행 (HMAC-SHA256 감사 무결성 해시, ※ 공인전자서명·공식 전자직인 아님)</span>
           </div>
         </div>
 

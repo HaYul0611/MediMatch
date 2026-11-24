@@ -2172,10 +2172,10 @@
       bootMean.textContent = advResult.bootstrap.meanSavedDays.toFixed(1) + '일 절감';
     }
     if (bootCi && advResult.bootstrap) {
-      bootCi.textContent = '95% BCa 신뢰구간: [' + advResult.bootstrap.ci95[0].toFixed(1) + '일, ' + advResult.bootstrap.ci95[1].toFixed(1) + '일] (B=' + advResult.bootstrap.iterations + '회)';
+      bootCi.textContent = '95% 백분위수 신뢰구간: [' + advResult.bootstrap.ci95[0].toFixed(1) + '일, ' + advResult.bootstrap.ci95[1].toFixed(1) + '일] (B=' + advResult.bootstrap.iterations + '회)';
     }
 
-    // Hospital ROI
+    // Hospital ROI (논문 Ⅳ.6.6절 시나리오 시뮬레이션 일치)
     var roi = advResult.economicRoi;
     if (roi) {
       var hVal = document.getElementById('roiHoursVal');

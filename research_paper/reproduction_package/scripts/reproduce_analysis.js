@@ -21,14 +21,27 @@ console.log(' 연구자: 오하율 (HIRA Research 투고용 정밀 검수 최종
 console.log('================================================================\n');
 
 // 1. 공공 데이터: 건강보험심사평가원 공식 공시 통계 대조
-console.log('1. [공공 데이터] 건강보험심사평가원 공식 공시 통계 대조');
+console.log('1. [공공 데이터] 건강보험심사평가원 공식 공시 통계 대조 (2020~2025)');
 console.log('----------------------------------------------------------------');
-console.log('[심평원 공식 공시 현황 (진료비 확인 신청 및 환불 처리)]');
-console.log('- 2024년: 접수 30,702건 | 처리 31,349건 | 환불 4,958건 (환불총액 2,732,164천 원, 처리대비 환불률 15.82%, 건당 551,062원)');
-console.log('- 2025년: 접수 40,524건 | 처리 36,388건 | 환불 4,241건 (환불총액 1,773,822천 원, 처리대비 환불률 11.65%, 건당 418,256원)');
-console.log('※ 공식 출처: 건강보험심사평가원(HIRA) 비급여 진료비 확인신청 처리 현황 (https://www.hira.or.kr)');
-console.log('※ 주의: 심평원 공시는 비급여 과다본인부담금 환불 결정 공공 통계이며,');
-console.log('        병원 내부 미식별 입금 및 미수령 환불금 잔류 규모와는 집계 대상이 상이함.\n');
+console.log('[심평원 공식 공시 현황 (비급여 진료비 확인신청 및 환불 처리)]');
+
+if (fs.existsSync(hiraFile)) {
+  let hiraContent = fs.readFileSync(hiraFile, 'utf8');
+  if (hiraContent.charCodeAt(0) === 0xFEFF) hiraContent = hiraContent.slice(1);
+  const hiraLines = hiraContent.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+  const hiraHeader = hiraLines[0].split(',').map(s => s.trim());
+  for (let i = 1; i < hiraLines.length; i++) {
+    const cols = hiraLines[i].split(',').map(s => s.trim());
+    const row = {};
+    hiraHeader.forEach((h, idx) => { row[h] = cols[idx]; });
+    const amountThousand = Math.round(Number(row.refund_amount_krw) / 1000).toLocaleString('ko-KR');
+    console.log(`- ${row.year}년: 접수 ${Number(row.received_requests).toLocaleString('ko-KR')}건 | 처리 ${Number(row.processed_cases).toLocaleString('ko-KR')}건 | 환불 ${Number(row.refund_approved_cases).toLocaleString('ko-KR')}건 (환불총액 ${amountThousand}천 원, 처리대비 환불률 ${Number(row.refund_rate_pct).toFixed(2)}%, 건당 ${Number(row.avg_refund_krw).toLocaleString('ko-KR')}원)`);
+  }
+}
+console.log('※ 공식 출처: 건강보험심사평가원(HIRA) 비급여 진료비 확인신청 및 처리 현황 (https://www.hira.or.kr/dummy.do?pgmid=HIRAA040037000000)');
+console.log('※ 개념 구분: 심평원 공시는 \'비급여 과다본인부담금 환불 결정\' 전국 공공 통계이며,');
+console.log('             의료기관 내부 \'미식별 입금\' 및 \'사망환자 미수령 환불금\' 장기 잔류 현황은');
+console.log('             전국 단위 공공 집계가 부재하여 본 연구의 모의 시뮬레이션(150건 모의 표본 및 연간 5,000건 모형)으로 규명함.\n');
 
 // 2. 실험 데이터셋 로드 및 분석
 if (!fs.existsSync(sampleFile)) {

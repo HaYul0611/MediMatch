@@ -135,22 +135,26 @@ assert('연간 총 운영 비용 1억 1,800만 원', roi.annualCost === 11800000
 assert('연간 순 편익 3억 3,600만 원', roi.netBenefit === 336000000);
 assert('순 투자회수율 Net ROI 284.7%', Math.abs(roi.netRoi - 284.75) < 0.2);
 
-// 9. 건강보험심사평가원(HIRA) 공식 공시 통계 정합성 검증
-console.log('\n[TEST 9] HIRA Official Refund Disclosure Statistics Integrity');
+// 9. 건강보험심사평가원(HIRA) 공식 공시 통계 정합성 검증 (2020~2025 6개년 전수)
+console.log('\n[TEST 9] HIRA Official Refund Disclosure Statistics Integrity (2020~2025)');
 const hira = data.hiraStats;
-assert('HIRA 공시 통계 배열 수록', Array.isArray(hira) && hira.length >= 6);
+assert('HIRA 공시 통계 배열 6개년 수록', Array.isArray(hira) && hira.length === 6);
+const stat2020 = hira.find(h => h.year === 2020);
+const stat2021 = hira.find(h => h.year === 2021);
+const stat2022 = hira.find(h => h.year === 2022);
+const stat2023 = hira.find(h => h.year === 2023);
 const stat2024 = hira.find(h => h.year === 2024);
 const stat2025 = hira.find(h => h.year === 2025);
-assert('2024년 공식 공시: 접수 30,702건', stat2024 && stat2024.totalRequests === 30702);
-assert('2024년 공식 공시: 처리 31,349건', stat2024 && stat2024.processedCases === 31349);
-assert('2024년 공식 공시: 환불 4,958건', stat2024 && stat2024.refundCases === 4958);
-assert('2024년 공식 공시: 환불총액 27억 3,216만 원 (2,732,164,000원)', stat2024 && stat2024.refundAmount === 2732164000);
-assert('2024년 공식 공시: 건당 환불액 551,062원', stat2024 && stat2024.avgRefund === 551062);
-assert('2025년 공식 공시: 접수 40,524건', stat2025 && stat2025.totalRequests === 40524);
-assert('2025년 공식 공시: 처리 36,388건', stat2025 && stat2025.processedCases === 36388);
-assert('2025년 공식 공시: 환불 4,241건', stat2025 && stat2025.refundCases === 4241);
-assert('2025년 공식 공시: 환불총액 17억 7,382만 원 (1,773,822,000원)', stat2025 && stat2025.refundAmount === 1773822000);
-assert('2025년 공식 공시: 건당 환불액 418,256원', stat2025 && stat2025.avgRefund === 418256);
+
+assert('2020년 공식 공시: 접수 26,872건, 환불 6,461건, 환불총액 20억 3,500만 원', stat2020 && stat2020.totalRequests === 26872 && stat2020.refundCases === 6461 && stat2020.refundAmount === 2035000000);
+assert('2021년 공식 공시: 접수 23,538건, 환불 4,895건, 환불총액 18억 8,600만 원', stat2021 && stat2021.totalRequests === 23538 && stat2021.refundCases === 4895 && stat2021.refundAmount === 1886000000);
+assert('2022년 공식 공시: 접수 24,471건, 환불 4,220건, 환불총액 14억 9,600만 원', stat2022 && stat2022.totalRequests === 24471 && stat2022.refundCases === 4220 && stat2022.refundAmount === 1496000000);
+assert('2023년 공식 공시: 접수 27,218건, 환불 4,123건, 환불총액 15억 4,800만 원', stat2023 && stat2023.totalRequests === 27218 && stat2023.refundCases === 4123 && stat2023.refundAmount === 1548000000);
+assert('2024년 공식 공시: 접수 30,702건, 환불 4,958건, 환불총액 27억 3,216만 원', stat2024 && stat2024.totalRequests === 30702 && stat2024.refundCases === 4958 && stat2024.refundAmount === 2732164000);
+assert('2024년 공식 공시: 건당 환불액 551,062원, 환불률 15.82%', stat2024 && stat2024.avgRefund === 551062 && stat2024.refundRate === 15.82);
+assert('2025년 공식 공시: 접수 40,524건, 환불 4,241건, 환불총액 17억 7,382만 원', stat2025 && stat2025.totalRequests === 40524 && stat2025.refundCases === 4241 && stat2025.refundAmount === 1773822000);
+assert('2025년 공식 공시: 건당 환불액 418,256원, 환불률 11.65%', stat2025 && stat2025.avgRefund === 418256 && stat2025.refundRate === 11.65);
+assert('공식 근거 없는 미수령·지연율 항목 배제 및 공식 환불률 탑재 확인', hira.every(h => !h.unclaimed_or_delayed_rate_pct && typeof h.refundRate === 'number'));
 
 // 10. 동일 표본수(N=100) 입력 데이터 변경 시 통계 엔진 동적 감도(Dynamic Sensitivity) 검증
 console.log('\n[TEST 10] Dynamic Sensitivity Test: Modified N=100 Input Yields Truly Different Output');

@@ -19,39 +19,52 @@ window.MEDIMATCH_DATA = {
   hiraStats: [
     {
       "year": 2020,
-      "totalRequests": 27018,
-      "refundCases": 4856,
-      "refundAmount": 1682000000,
-      "avgRefund": 346375,
-      "note": "HIRA 공식 공시 통계"
+      "totalRequests": 26872,
+      "receivedRequests": 26872,
+      "processedCases": 27029,
+      "refundCases": 6461,
+      "refundAmount": 2035000000,
+      "avgRefund": 314967,
+      "refundRate": 23.90,
+      "note": "HIRA 공식 공시 (접수 26,872건 / 처리 27,029건 / 환불 6,461건 / 20억 3,500만 원)"
     },
     {
       "year": 2021,
-      "totalRequests": 26245,
-      "refundCases": 4612,
-      "refundAmount": 1594000000,
-      "avgRefund": 345620,
-      "note": "HIRA 공식 공시 통계"
+      "totalRequests": 23538,
+      "receivedRequests": 23538,
+      "processedCases": 23582,
+      "refundCases": 4895,
+      "refundAmount": 1886000000,
+      "avgRefund": 385291,
+      "refundRate": 20.76,
+      "note": "HIRA 공식 공시 (접수 23,538건 / 처리 23,582건 / 환불 4,895건 / 18억 8,600만 원)"
     },
     {
       "year": 2022,
-      "totalRequests": 25190,
-      "refundCases": 4320,
-      "refundAmount": 1512000000,
-      "avgRefund": 350000,
-      "note": "HIRA 공식 공시 통계"
+      "totalRequests": 24471,
+      "receivedRequests": 24471,
+      "processedCases": 24482,
+      "refundCases": 4220,
+      "refundAmount": 1496000000,
+      "avgRefund": 354502,
+      "refundRate": 17.24,
+      "note": "HIRA 공식 공시 (접수 24,471건 / 처리 24,482건 / 환불 4,220건 / 14억 9,600만 원)"
     },
     {
       "year": 2023,
-      "totalRequests": 24850,
-      "refundCases": 4205,
-      "refundAmount": 1485000000,
-      "avgRefund": 353150,
-      "note": "HIRA 공식 공시 통계"
+      "totalRequests": 27218,
+      "receivedRequests": 27218,
+      "processedCases": 25513,
+      "refundCases": 4123,
+      "refundAmount": 1548000000,
+      "avgRefund": 375455,
+      "refundRate": 16.16,
+      "note": "HIRA 공식 공시 (접수 27,218건 / 처리 25,513건 / 환불 4,123건 / 15억 4,800만 원)"
     },
     {
       "year": 2024,
       "totalRequests": 30702,
+      "receivedRequests": 30702,
       "processedCases": 31349,
       "refundCases": 4958,
       "refundAmount": 2732164000,
@@ -62,6 +75,7 @@ window.MEDIMATCH_DATA = {
     {
       "year": 2025,
       "totalRequests": 40524,
+      "receivedRequests": 40524,
       "processedCases": 36388,
       "refundCases": 4241,
       "refundAmount": 1773822000,

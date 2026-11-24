@@ -23,10 +23,10 @@ window.MEDIMATCH_DATA = {
       "receivedRequests": 26872,
       "processedCases": 27029,
       "refundCases": 6461,
-      "refundAmount": 2035000000,
-      "avgRefund": 314967,
+      "refundAmount": 2034954000,
+      "avgRefund": 314960,
       "refundRate": 23.90,
-      "note": "HIRA 공식 공시 (접수 26,872건 / 처리 27,029건 / 환불 6,461건 / 20억 3,500만 원)"
+      "note": "HIRA 공식 공시 (접수 26,872건 / 처리 27,029건 / 환불 6,461건 / 20억 3,495만 원)"
     },
     {
       "year": 2021,
@@ -34,10 +34,10 @@ window.MEDIMATCH_DATA = {
       "receivedRequests": 23538,
       "processedCases": 23582,
       "refundCases": 4895,
-      "refundAmount": 1886000000,
-      "avgRefund": 385291,
+      "refundAmount": 1885874000,
+      "avgRefund": 385265,
       "refundRate": 20.76,
-      "note": "HIRA 공식 공시 (접수 23,538건 / 처리 23,582건 / 환불 4,895건 / 18억 8,600만 원)"
+      "note": "HIRA 공식 공시 (접수 23,538건 / 처리 23,582건 / 환불 4,895건 / 18억 8,587만 원)"
     },
     {
       "year": 2022,
@@ -45,21 +45,21 @@ window.MEDIMATCH_DATA = {
       "receivedRequests": 24471,
       "processedCases": 24482,
       "refundCases": 4220,
-      "refundAmount": 1496000000,
-      "avgRefund": 354502,
+      "refundAmount": 1495981000,
+      "avgRefund": 354498,
       "refundRate": 17.24,
-      "note": "HIRA 공식 공시 (접수 24,471건 / 처리 24,482건 / 환불 4,220건 / 14억 9,600만 원)"
+      "note": "HIRA 공식 공시 (접수 24,471건 / 처리 24,482건 / 환불 4,220건 / 14억 9,598만 원)"
     },
     {
       "year": 2023,
-      "totalRequests": 27218,
-      "receivedRequests": 27218,
+      "totalRequests": 27226,
+      "receivedRequests": 27226,
       "processedCases": 25513,
       "refundCases": 4123,
-      "refundAmount": 1548000000,
-      "avgRefund": 375455,
+      "refundAmount": 1548397000,
+      "avgRefund": 375551,
       "refundRate": 16.16,
-      "note": "HIRA 공식 공시 (접수 27,218건 / 처리 25,513건 / 환불 4,123건 / 15억 4,800만 원)"
+      "note": "HIRA 공식 공시 (접수 27,226건 / 처리 25,513건 / 환불 4,123건 / 15억 4,840만 원)"
     },
     {
       "year": 2024,

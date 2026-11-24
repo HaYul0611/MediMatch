@@ -146,10 +146,10 @@ const stat2023 = hira.find(h => h.year === 2023);
 const stat2024 = hira.find(h => h.year === 2024);
 const stat2025 = hira.find(h => h.year === 2025);
 
-assert('2020년 공식 공시: 접수 26,872건, 환불 6,461건, 환불총액 20억 3,500만 원', stat2020 && stat2020.totalRequests === 26872 && stat2020.refundCases === 6461 && stat2020.refundAmount === 2035000000);
-assert('2021년 공식 공시: 접수 23,538건, 환불 4,895건, 환불총액 18억 8,600만 원', stat2021 && stat2021.totalRequests === 23538 && stat2021.refundCases === 4895 && stat2021.refundAmount === 1886000000);
-assert('2022년 공식 공시: 접수 24,471건, 환불 4,220건, 환불총액 14억 9,600만 원', stat2022 && stat2022.totalRequests === 24471 && stat2022.refundCases === 4220 && stat2022.refundAmount === 1496000000);
-assert('2023년 공식 공시: 접수 27,218건, 환불 4,123건, 환불총액 15억 4,800만 원', stat2023 && stat2023.totalRequests === 27218 && stat2023.refundCases === 4123 && stat2023.refundAmount === 1548000000);
+assert('2020년 공식 공시: 접수 26,872건, 환불 6,461건, 환불총액 2,034,954,000원, 건당 314,960원', stat2020 && stat2020.totalRequests === 26872 && stat2020.refundCases === 6461 && stat2020.refundAmount === 2034954000 && stat2020.avgRefund === 314960);
+assert('2021년 공식 공시: 접수 23,538건, 환불 4,895건, 환불총액 1,885,874,000원, 건당 385,265원', stat2021 && stat2021.totalRequests === 23538 && stat2021.refundCases === 4895 && stat2021.refundAmount === 1885874000 && stat2021.avgRefund === 385265);
+assert('2022년 공식 공시: 접수 24,471건, 환불 4,220건, 환불총액 1,495,981,000원, 건당 354,498원', stat2022 && stat2022.totalRequests === 24471 && stat2022.refundCases === 4220 && stat2022.refundAmount === 1495981000 && stat2022.avgRefund === 354498);
+assert('2023년 공식 공시: 접수 27,226건, 환불 4,123건, 환불총액 1,548,397,000원, 건당 375,551원', stat2023 && stat2023.totalRequests === 27226 && stat2023.refundCases === 4123 && stat2023.refundAmount === 1548397000 && stat2023.avgRefund === 375551);
 assert('2024년 공식 공시: 접수 30,702건, 환불 4,958건, 환불총액 27억 3,216만 원', stat2024 && stat2024.totalRequests === 30702 && stat2024.refundCases === 4958 && stat2024.refundAmount === 2732164000);
 assert('2024년 공식 공시: 건당 환불액 551,062원, 환불률 15.82%', stat2024 && stat2024.avgRefund === 551062 && stat2024.refundRate === 15.82);
 assert('2025년 공식 공시: 접수 40,524건, 환불 4,241건, 환불총액 17억 7,382만 원', stat2025 && stat2025.totalRequests === 40524 && stat2025.refundCases === 4241 && stat2025.refundAmount === 1773822000);

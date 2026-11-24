@@ -163,8 +163,8 @@ MediMatch 애플리케이션 화면, 차트, 도움말 툴팁에서 **다음 항
   * 파일 크기: 15,423 bytes
   * **SHA-256 Checksum**: `8069a3aa4f8113841559149673dfed28878f31d543e0be1f3f10aab7d6a27c64`
 * **심평원 공공통계 CSV 경로**: `research_paper/reproduction_package/data/hira_refund_statistics_2020_2025.csv`
-  * 공식 출처: 건강보험심사평가원(HIRA) 비급여 진료비 확인신청 및 처리 현황 (https://www.hira.or.kr/dummy.do?pgmid=HIRAA040037000000)
-  * 2020~2025 6개년 공식 공시 통계 전수 대조 및 0건 불일치 검증 완료 (접수, 처리, 환불건수, 환불금액, 건당금액, 환불률)
+  * 공식 출처: 건강보험심사평가원(HIRA) 요양급여대상여부확인접수처리현황 (https://www.hira.or.kr/dummy.do?pgmid=HIRAA040037000000)
+  * 2020~2025 6개년 공식 공시 통계 전수 대조 및 0건 불일치 검증 완료 (2023년 접수 27,226건 및 2020~2023년 천 원 단위 원본 정밀 환산 반영)
   * 구버전 출처 미검증 CSV는 `hira_refund_statistics_2020_2025_legacy_unverified.csv`로 분리 보존
   * 병원 원내 미수령·미정산 장기 잔류 통계는 공공 통계 부재 항목으로 명확히 구분 규명
 * **Node.js 재현 스크립트 실행 명령**:

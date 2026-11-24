@@ -135,6 +135,67 @@ assert('연간 총 운영 비용 1억 1,800만 원', roi.annualCost === 11800000
 assert('연간 순 편익 3억 3,600만 원', roi.netBenefit === 336000000);
 assert('순 투자회수율 Net ROI 284.7%', Math.abs(roi.netRoi - 284.75) < 0.2);
 
+// 9. 건강보험심사평가원(HIRA) 공식 공시 통계 정합성 검증
+console.log('\n[TEST 9] HIRA Official Refund Disclosure Statistics Integrity');
+const hira = data.hiraStats;
+assert('HIRA 공시 통계 배열 수록', Array.isArray(hira) && hira.length >= 6);
+const stat2024 = hira.find(h => h.year === 2024);
+const stat2025 = hira.find(h => h.year === 2025);
+assert('2024년 공식 공시: 접수 30,702건', stat2024 && stat2024.totalRequests === 30702);
+assert('2024년 공식 공시: 처리 31,349건', stat2024 && stat2024.processedCases === 31349);
+assert('2024년 공식 공시: 환불 4,958건', stat2024 && stat2024.refundCases === 4958);
+assert('2024년 공식 공시: 환불총액 27억 3,216만 원 (2,732,164,000원)', stat2024 && stat2024.refundAmount === 2732164000);
+assert('2024년 공식 공시: 건당 환불액 551,062원', stat2024 && stat2024.avgRefund === 551062);
+assert('2025년 공식 공시: 접수 40,524건', stat2025 && stat2025.totalRequests === 40524);
+assert('2025년 공식 공시: 처리 36,388건', stat2025 && stat2025.processedCases === 36388);
+assert('2025년 공식 공시: 환불 4,241건', stat2025 && stat2025.refundCases === 4241);
+assert('2025년 공식 공시: 환불총액 17억 7,382만 원 (1,773,822,000원)', stat2025 && stat2025.refundAmount === 1773822000);
+assert('2025년 공식 공시: 건당 환불액 418,256원', stat2025 && stat2025.avgRefund === 418256);
+
+// 10. 동일 표본수(N=100) 입력 데이터 변경 시 통계 엔진 동적 감도(Dynamic Sensitivity) 검증
+console.log('\n[TEST 10] Dynamic Sensitivity Test: Modified N=100 Input Yields Truly Different Output');
+// 가상 변형 표본 1: 모든 100건의 proposedMatched를 false로 조작한 데이터
+const modifiedDepZero = dep100.map(s => Object.assign({}, s, { proposedMatched: false }));
+const cvZero = StatsEngine.runCrossValidation(modifiedDepZero, 5);
+assert('데이터 변경 시 5-Fold 평균 정확도 동적 변화 (84.0% -> 0.0%)', cvZero.meanValAccuracy === 0.0);
+assert('데이터 변경 시 Fold 1 식별 성공률 동적 변화 (85.0% -> 0.0%)', cvZero.folds[0].valAccuracy === 0.0);
+assert('데이터 변경 시 Fold 5 식별 성공률 동적 변화 (80.0% -> 0.0%)', cvZero.folds[4].valAccuracy === 0.0);
+
+// 가상 변형 표본 2: daysProposed를 모두 기존 방식과 동일하게 조작하여 절감 효과를 0으로 만든 데이터
+const modifiedDepZeroDays = dep100.map(s => Object.assign({}, s, { daysProposed: s.daysLegacy }));
+const bootZeroDays = StatsEngine._computeBootstrap(modifiedDepZeroDays, 500);
+assert('데이터 변경 시 부트스트랩 평균 절감일수 동적 변화 (128.1일 -> 0.0일 근사)', Math.abs(bootZeroDays.meanSavedDays) < 0.1);
+assert('데이터 변경 시 부트스트랩 95% CI 하한 동적 변화 (118.7일 -> 0.0일 근사)', Math.abs(bootZeroDays.ci95[0]) < 0.1);
+
+// 가상 변형 표본 3: 가설 6.1 검정 시 proposedMatched가 0건이면 식별 성공률이 0%로 산출되는지 확인
+const hypZero = StatsEngine.runHypothesisTests(modifiedDepZero);
+assert('데이터 변경 시 가설 6.1 제안모형 식별 성공률 동적 변화 (84.0% -> 0.0%)', hypZero[0].proposedRate === 0.0);
+assert('데이터 변경 시 가설 6.1 검정 통계량 변화 확인', hypZero[0].statisticValue !== hyp150[0].statisticValue);
+
+// 11. 동일 표본수(N=150) 입력 데이터 변경 시 Kaplan-Meier 생존분석 동적 변화 검증
+console.log('\n[TEST 11] Dynamic Sensitivity Test: Modified N=150 Input Yields Truly Different Kaplan-Meier Curve');
+// 가상 변형 표본 4: 모든 건의 daysProposed를 150일로 늘리고 20건만 매칭시킨 데이터
+const modifiedSample150 = data.researchSample150.map((s, idx) => Object.assign({}, s, {
+  proposedMatched: idx < 20,
+  daysProposed: 150
+}));
+const advModified = StatsEngine.runAdvancedAnalysis(modifiedSample150);
+const kmMod = advModified.kaplanMeier;
+assert('데이터 변경 시 KM 완료 건수 동적 변화 (124건 -> 20건)', kmMod.completedCount === 20);
+assert('데이터 변경 시 KM 검열 건수 동적 변화 (26건 -> 130건)', kmMod.censoredCount === 130);
+assert('데이터 변경 시 완료 건 평균 소요일 동적 변화 (7.37일 -> 150.0일)', kmMod.completedMeanDays === 150.0);
+assert('데이터 변경 시 20일 시점 생존율 동적 변화 (0.173 -> 1.0)', kmMod.proposedCurve.find(c => c.t === 20).s === 1.0);
+assert('데이터 변경 시 240일 시점 잔류율 동적 변화 (0.173 -> 0.867)', kmMod.proposedCurve.find(c => c.t === 240).s >= 0.86);
+
+// 12. 논문 실증 확정치(paperReference)와 실제 계산값의 명확한 분리 검증
+console.log('\n[TEST 12] Separation of Paper Fixed Reference vs Dynamic Calculation');
+assert('5-Fold 결과 내 논문 확정치 참고 객체(paperReference) 분리 존재', cv150.paperReference && cv150.paperReference.meanValAccuracy === 84.0);
+assert('5-Fold 논문 확정치 Fold 성공건수 [17, 17, 17, 17, 16] 분리 보관', cv150.paperReference.foldSuccess.length === 5 && cv150.paperReference.foldSuccess[4] === 16);
+assert('KM 분석 내 논문 확정치 참고 객체(paperReference) 분리 존재', km.paperReference && km.paperReference.proposedMedianDays === 7.0);
+assert('KM 논문 확정치 완료 124건 및 평균 7.37일 분리 보관', km.paperReference.completedCount === 124 && km.paperReference.completedMeanDays === 7.37);
+assert('부트스트랩 내 논문 확정치 참고 객체(paperReference) 분리 존재', boot.paperReference && boot.paperReference.meanSavedDays === 128.1);
+assert('부트스트랩 논문 확정치 95% CI [118.7, 137.4] 분리 보관', boot.paperReference.ci95[0] === 118.7 && boot.paperReference.ci95[1] === 137.4);
+
 // 종합 결과 출력
 console.log('\n======================================================================');
 console.log('                     페일패스트 검증 결과 요약                     ');
